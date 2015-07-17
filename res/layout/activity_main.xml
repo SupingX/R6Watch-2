@@ -1,0 +1,127 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_main_bg"
+    tools:context="${packageName}.${activityClass}" >
+
+    <RadioGroup
+        android:id="@+id/rg_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="3" >
+	
+        <RelativeLayout
+            android:id="@+id/ll_infomation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+              android:background="@drawable/selector_bottom_item"
+            android:paddingBottom="8dp" >
+
+            <TextView
+                android:id="@+id/tv_infomation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="我的状态"
+                android:textColor="@color/lv"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/img_infomation"
+                style="@style/AppBaseTheme"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_above="@id/tv_infomation"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/my_state_button"
+                android:contentDescription="@string/app_name" />
+        </RelativeLayout>
+
+       
+
+      
+
+        <RelativeLayout
+                   android:clickable="true"
+              android:background="@drawable/selector_bottom_item"
+            android:id="@+id/ll_count"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingBottom="8dp" >
+
+            <TextView
+                android:id="@+id/tv_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="数据统计"
+                android:textColor="@color/lv"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/img_count"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_above="@id/tv_count"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/statistics_button"
+                android:contentDescription="@string/app_name" />
+        </RelativeLayout>
+
+        <RelativeLayout
+                   android:clickable="true"
+              android:background="@drawable/selector_bottom_item"
+            android:id="@+id/ll_setting"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingBottom="8dp" >
+
+            <TextView
+                android:id="@+id/tv_setting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="0dp"
+                android:gravity="center"
+                android:text="设  置"
+                android:textColor="@color/lv"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/img_setting"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_above="@id/tv_setting"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/setting_button"
+                android:contentDescription="@string/app_name" />
+        </RelativeLayout>
+    </RadioGroup>
+	<View  android:layout_width="match_parent"
+		    android:layout_height="1px"
+		    android:background="#000"
+		     android:layout_above="@id/rg_bottom"
+		    />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/rg_bottom" />
+
+</RelativeLayout>

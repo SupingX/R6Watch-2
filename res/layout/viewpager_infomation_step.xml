@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${packageName}.${activityClass}" >
+    <TextView
+        android:id="@+id/tv_step"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="已走步数   : 0"
+        android:textColor="@color/blue" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/tv_step" >
+
+        <ImageView
+            android:id="@+id/img_foot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="40dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/sport_monitor_foot" />
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="100dp"
+            android:layout_height="2dp"
+            android:layout_below="@id/img_foot"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:background="@color/blue" />
+
+        <TextView
+            android:id="@+id/tv_step_model"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/line"
+            android:layout_centerHorizontal="true"
+            android:text="随意模式"
+            android:textColor="@color/blue" />
+
+        <com.mycj.healthy.view.StepCircle
+            
+            android:layout_marginTop="20dp"
+            android:id="@+id/step_circle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true" >
+        </com.mycj.healthy.view.StepCircle>
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

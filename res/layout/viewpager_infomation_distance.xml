@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="4"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    tools:context="${packageName}.${activityClass}" 
+   >
+
+    <TextView
+        android:id="@+id/tv_dis_pedo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="目标距离	: 40.00(km)" />
+
+    <com.mycj.healthy.view.DistanceView
+        android:id="@+id/view_distance"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4" >
+    </com.mycj.healthy.view.DistanceView>
+
+    <TextView
+        android:id="@+id/tv_distance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="完成0.00千米"
+        android:textColor="@color/blue" />
+
+</LinearLayout>
