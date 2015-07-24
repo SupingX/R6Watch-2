@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import android.animation.ObjectAnimator;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Typeface;
@@ -57,6 +58,7 @@ public class InformationFragment extends Fragment implements OnClickListener {
 	private View sleepView;
 	private View middleSleepView;
 	private View restView;
+	private ImageView imgHr;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,27 +77,38 @@ public class InformationFragment extends Fragment implements OnClickListener {
 		
 		frame = (FrameLayout) view.findViewById(R.id.vp_top);
 		//几步
-		stepView = inflater.inflate(R.layout.viewpager_infomation_step,null);
+		stepView = inflater.inflate(R.layout.view_infomation_step,null);
 		stepCircle = (StepCircle) stepView.findViewById(R.id.step_circle);
 		tvStep = (TextView) stepView.findViewById(R.id.tv_step);
 		//距离
-		distanceView = inflater.inflate(R.layout.viewpager_infomation_distance,null);
+		distanceView = inflater.inflate(R.layout.view_infomation_distance,null);
 		disView = (DistanceView) distanceView.findViewById(R.id.view_distance);
 		tvDistanceGoal = (TextView) distanceView.findViewById(R.id.tv_dis_pedo);
 		tvDistanceComplete = (TextView) distanceView.findViewById(R.id.tv_distance);
 		//卡洛里
-		kcalView = inflater.inflate(R.layout.viewpager_infomation_cal, container,false);
+		kcalView = inflater.inflate(R.layout.view_infomation_cal, container,false);
 		tvCalGoal = (TextView) kcalView.findViewById(R.id.tv_cal_value);
 		tvCalComplete = (TextView) kcalView.findViewById(R.id.tv_cal_complete);
 		calProgress = (CalProgressBar) kcalView.findViewById(R.id.progress);
 		//心率
-		hrView  = inflater.inflate(R.layout.viewpager_infomation_hr, container,false);
+		hrView  = inflater.inflate(R.layout.view_infomation_hr, container,false);
+		imgHr = (ImageView) hrView.findViewById(R.id.img_hr);
+		ObjectAnimator animator1 = ObjectAnimator.ofFloat(imgHr, "scaleX", 1f,3f,1f);
+		ObjectAnimator animator2 = ObjectAnimator.ofFloat(imgHr, "scaleY",  1f,3f,1f);
+		animator1.setDuration(200);
+		animator1.setRepeatCount(-1); //动画循环播放的次数
+		animator2.setDuration(200);
+		animator2.setRepeatCount(-1); //动画循环播放的次数
+		
+		animator1.start();
+		animator2.start();
+		
 		//睡眠
-		sleepView  = inflater.inflate(R.layout.viewpager_infomation_sleep, container,false);
+		sleepView  = inflater.inflate(R.layout.view_infomation_sleep, container,false);
 		//午休
-		middleSleepView  = inflater.inflate(R.layout.viewpager_infomation_middle_sleep, container,false);
+		middleSleepView  = inflater.inflate(R.layout.view_infomation_middle_sleep, container,false);
 		//小憩
-		restView  = inflater.inflate(R.layout.viewpager_infomation_rest, container,false);
+		restView  = inflater.inflate(R.layout.view_infomation_rest, container,false);
 		//初始化
 		frame.addView(stepView);
 		
@@ -157,6 +170,7 @@ public class InformationFragment extends Fragment implements OnClickListener {
 			clearSelected();
 			frame.removeAllViews();
 			frame.addView(hrView);
+			imgHeart.setImageResource(R.drawable.sport_monitor_hr_icon_on);
 //			currentFragment = 3;
 //			selected();
 			break;
@@ -164,6 +178,7 @@ public class InformationFragment extends Fragment implements OnClickListener {
 			clearSelected();
 			frame.removeAllViews();
 			frame.addView(sleepView);
+			imgSleep.setImageResource(R.drawable.sleep_tracking_sleep_icon_on);
 //			currentFragment = 4;
 //			selected();
 			break;
@@ -171,6 +186,7 @@ public class InformationFragment extends Fragment implements OnClickListener {
 			clearSelected();
 			frame.removeAllViews();
 			frame.addView(middleSleepView);
+			imgMiddleSleep.setImageResource(R.drawable.sleep_tracking_midday_rest_icon_on);
 //			currentFragment = 5;
 //			selected();
 			break;
@@ -178,6 +194,7 @@ public class InformationFragment extends Fragment implements OnClickListener {
 			clearSelected();
 			frame.removeAllViews();
 			frame.addView(restView);
+			imgRest.setImageResource(R.drawable.sleep_tracking_rest_icon_on);
 //			currentFragment = 6;
 //			selected();
 			break;

@@ -4,5 +4,24 @@
     android:layout_height="match_parent"
     tools:context="${packageName}.${activityClass}" >
 
+  <LinearLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:orientation="vertical" >
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:text="数据统计"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </LinearLayout>
+   <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/top"
+            android:background="@color/white" />
 </RelativeLayout>

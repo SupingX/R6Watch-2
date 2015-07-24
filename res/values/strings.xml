@@ -3,5 +3,18 @@
 
     <string name="app_name">HealthySport</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_step_goal">StepGoalActivity</string>
+    <string name="title_activity_setting_heart_rate_set">SettingHeartRateSetActivity</string>
+    <string name="title_activity_setting_sleep_time_set">SettingSleepTimeSetActivity</string>
+    <string name="title_activity_setting_clock_set">SettingClockSetActivity</string>
+    <string name="title_activity_camera_and_search">CameraAndSearchActivity</string>
+    <string name="title_activity_setting_auto_heart_rate">SettingAutoHeartRateActivity</string>
+    <string name="title_activity_setting_binded_device">SettingBindedDeviceActivity</string>
+    <string name="title_activity_setting_phone_incoming">SettingPhoneIncomingActivity</string>
+    <string name="title_activity_message_incming">MessageIncmingActivity</string>
+    <string name="title_activity_setting_remind">SettingRemindActivity</string>
+    <string name="title_activity_setting_remind_type_set">SettingRemindTypeSetActivity</string>
+    <string name="title_activity_setting_disconnect">SettingDisconnectActivity</string>
+    <string name="title_activity_introduce_app">IntroduceAppActivity</string>
 
 </resources>

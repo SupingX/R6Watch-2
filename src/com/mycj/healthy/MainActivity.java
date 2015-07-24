@@ -1,11 +1,8 @@
 package com.mycj.healthy;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
-import com.mycj.healthy.fragment.CountFragment;
-import com.mycj.healthy.fragment.InformationFragment;
-import com.mycj.healthy.fragment.SettingFragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +18,11 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.mycj.healthy.fragment.CountFragment;
+import com.mycj.healthy.fragment.InformationFragment;
+import com.mycj.healthy.fragment.SettingFragment;
+import com.mycj.healthy.util.ProtoclData;
 
 public class MainActivity extends FragmentActivity implements OnClickListener {
 	private ViewPager mViewPager;
@@ -40,6 +42,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		initViews();
 		setListener();
 		mRadioGroup.check(R.id.ll_infomation);
+	
 	}
 
 	@Override

@@ -24,13 +24,19 @@
             android:layout_height="48dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/selector_information_upload"
+            android:background="@drawable/selector_bg_information_upload"
             android:clickable="true"
             android:contentDescription="@string/app_name"
             android:padding="12dp"
             android:src="@drawable/my_state_information_upload_icon" />
     </RelativeLayout>
+      <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/top"
+            android:background="@color/white" />
 <ScrollView 
+    android:scrollbars="none"
         android:layout_below="@id/top"
     android:layout_height="match_parent"
     android:layout_width="match_parent"

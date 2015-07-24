@@ -4,5 +4,851 @@
     android:layout_height="match_parent"
     tools:context="${packageName}.${activityClass}" >
 
+    <LinearLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:text="设置"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/top"
+        android:background="@color/white" />
+
+    <ScrollView
+        android:id="@+id/sc_setting"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/top"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:id="@+id/bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:id="@+id/rl_goal_step"
+                style="@style/setting_item"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_setting_height"
+                android:clickable="true" >
+
+                <ImageView
+                    android:id="@+id/img_goal_step"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/setting_target_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/img_goal_step"
+                    android:text="步数目标设置"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/right_step"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/icon_right_arrow" />
+
+                <TextView
+                    android:id="@+id/tv_goal_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_toStartOf="@id/right_step"
+                    android:text="25523步"
+                    android:textColor="@color/grey_light" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="16dp"
+                    style="@style/setting_item_line"
+                android:layout_marginRight="16dp"
+               />
+
+            <RelativeLayout
+                android:id="@+id/rl_max_heart"
+                style="@style/setting_item"
+                android:layout_width="match_parent"
+              android:layout_height="@dimen/item_setting_height"
+                android:clickable="true" >
+
+                <ImageView
+                    android:id="@+id/img_max_heart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/setting_hr_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/img_max_heart"
+                    android:text="心率最大值"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/right_heart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/icon_right_arrow" />
+
+                <TextView
+                    android:id="@+id/tv_max_heart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_toStartOf="@id/right_heart"
+                    android:text="25523步"
+                    android:textColor="@color/grey_light" />
+            </RelativeLayout>
+
+          <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                   style="@style/setting_item_line"
+                     android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+               />
+
+            <RelativeLayout
+                android:id="@+id/rl_sleep_time"
+                style="@style/setting_item"
+                android:layout_width="match_parent"
+                     android:layout_height="@dimen/item_setting_height"
+                android:clickable="true" >
+
+                <ImageView
+                    android:id="@+id/img_sleep_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/setting_rest_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/img_sleep_time"
+                    android:text="睡眠时间"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/right_sleep_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/icon_right_arrow" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                style="@style/setting_item_line"
+                  android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+               />
+
+            <RelativeLayout
+                android:id="@+id/rl_clock"
+                style="@style/setting_item"
+                android:layout_width="match_parent"
+                 android:layout_height="@dimen/item_setting_height"
+                android:clickable="true" >
+
+                <ImageView
+                    android:id="@+id/img_clock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/setting_alarm_clock_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/img_clock"
+                    android:text="闹钟"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/right_clock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/icon_right_arrow" />
+
+                <TextView
+                    android:id="@+id/tv_clock_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_toStartOf="@id/right_clock"
+                    android:text="12:00"
+                    android:textColor="@color/grey_light" />
+            </RelativeLayout>
+
+          <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                   style="@style/setting_item_line"
+                     android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+               />
+
+            <!-- <RelativeLayout
+                android:id="@+id/rl_camera_search"
+                style="@style/setting_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true" >
+
+                <ImageView
+                    android:id="@+id/img_camera_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/setting_camera_alarmer_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/img_camera_search"
+                    android:text="拍照/寻物功能"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/right__camera_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/icon_right_arrow" />
+
+                <TextView
+                    android:id="@+id/tv_camera_search_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_toStartOf="@id/right__camera_search"
+                    android:text="拍照/寻物  开启 "
+                    android:textColor="@color/grey_light" />
+            </RelativeLayout>
+
+             <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+          style="@style/setting_item_line"
+            android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+               /> -->
+
+            <RelativeLayout
+                android:id="@+id/rl_auto_hr"
+                style="@style/setting_item"
+                android:layout_width="match_parent"
+             android:layout_height="@dimen/item_setting_height"
+                android:clickable="true" >
+
+                <ImageView
+                    android:id="@+id/img_auto_hr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/setting_auto_hr_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/img_auto_hr"
+                    android:text="自动心率测试"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/right_auto_hr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/icon_right_arrow" />
+
+                <TextView
+                    android:id="@+id/tv_auto_hr_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_toStartOf="@id/right_auto_hr"
+                    android:text="已开启"
+                    android:textColor="@color/grey_light" />
+            </RelativeLayout>
+
+             <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+              style="@style/setting_item_line"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+               />
+
+            <RelativeLayout
+                android:id="@+id/rl_binding"
+                style="@style/setting_item"
+                android:layout_width="match_parent"
+           android:layout_height="@dimen/item_setting_height"
+                android:clickable="true" >
+
+                <ImageView
+                    android:id="@+id/img_binding"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/setting_binding_device_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/img_binding"
+                    android:text="绑定设备"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/right_binding"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/icon_right_arrow" />
+
+                <TextView
+                    android:id="@+id/tv_binding_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_toStartOf="@id/right_binding"
+                    android:text="未绑定"
+                    android:textColor="@color/grey_light" />
+            </RelativeLayout>
+
+             <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                  style="@style/setting_item_line"
+                    android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+               />
+
+            <RelativeLayout
+                android:id="@+id/rl_update"
+                style="@style/setting_item"
+                android:layout_width="match_parent"
+                 android:layout_height="@dimen/item_setting_height"
+                android:clickable="true" >
+
+                <ImageView
+                    android:id="@+id/img_update"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/setting_update_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/img_update"
+                    android:text="同步所有数据"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/right_update"
+                    android:layout_width="32dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/setting_synchronous_time_button" />
+            </RelativeLayout>
+
+           <View
+                android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:background="@drawable/bg_light"
+               />
+
+            <RelativeLayout
+                android:id="@+id/rl_more"
+                style="@style/setting_item"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:clickable="true" >
+
+                <ImageView
+                    android:id="@+id/img_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/setting_advanced_option_icon_open" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_centerVertical="true"
+                    android:text="更多"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+            <LinearLayout 
+                android:id="@+id/ll_more"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                >
+
+          <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                   style="@style/setting_item_line"
+                     android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+               />
+
+            <RelativeLayout
+                android:id="@+id/rl_phone_incoming"
+                style="@style/setting_item"
+                android:layout_width="match_parent"
+       android:layout_height="@dimen/item_setting_height"
+                android:clickable="true" >
+
+                <ImageView
+                    android:id="@+id/img_phone_incoming"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/setting_phone_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/img_phone_incoming"
+                    android:text="来电提示"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/right_phone_incoming"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/icon_right_arrow" />
+
+                <TextView
+                    android:id="@+id/tv_phone_incoming_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_toStartOf="@id/right_phone_incoming"
+                    android:text="已开启"
+                    android:textColor="@color/grey_light" />
+            </RelativeLayout>
+
+         <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                    style="@style/setting_item_line"
+                      android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+               />
+
+          <!--   <RelativeLayout
+                android:id="@+id/rl_message"
+                style="@style/setting_item"
+                android:layout_width="match_parent"
+              android:layout_height="@dimen/item_setting_height"
+                android:clickable="true" >
+
+                <ImageView
+                    android:id="@+id/img_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/setting_massage_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/img_message"
+                    android:text="新信息提示"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/right_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/icon_right_arrow" />
+
+                <TextView
+                    android:id="@+id/tv_message_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_toStartOf="@id/right_message"
+                    android:text="已开启"
+                    android:textColor="@color/grey_light" />
+            </RelativeLayout> -->
+
+           <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+              style="@style/setting_item_line"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+               />
+
+       <!--      <RelativeLayout
+                android:id="@+id/rl_remind"
+                style="@style/setting_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true" >
+
+                <ImageView
+                    android:id="@+id/img_remind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/setting_remind_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/img_remind"
+                    android:text="事件提醒"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/right_remind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/icon_right_arrow" />
+            </RelativeLayout>
+
+         <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+              style="@style/setting_item_line"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+               /> -->
+
+         <!--    <RelativeLayout
+                android:id="@+id/rl_remind_type"
+                style="@style/setting_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true" >
+
+                <ImageView
+                    android:id="@+id/img_remind_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/setting_remind_setting_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/img_remind_type"
+                    android:text="提示方式"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/right_remind_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/icon_right_arrow" />
+            </RelativeLayout>
+
+          <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                 style="@style/setting_item_line"
+                   android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+               /> -->
+            <RelativeLayout
+                android:id="@+id/rl_sync_time"
+                style="@style/setting_item"
+                android:layout_width="match_parent"
+               android:layout_height="@dimen/item_setting_height"
+                android:clickable="true" >
+
+                <ImageView
+                    android:id="@+id/img_sync_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/setting_synchronous_time_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/img_sync_time"
+                    android:text="同步手表时间"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/right_sync_time"
+                    android:layout_width="32dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/setting_synchronous_time_button" />
+            </RelativeLayout>
+
+           <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                   style="@style/setting_item_line"
+                     android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+             
+               />
+       <!--      <RelativeLayout
+                android:id="@+id/rl_disconnect"
+                style="@style/setting_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true" >
+
+                <ImageView
+                    android:id="@+id/img_disconnect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/setting_disconnect" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/img_disconnect"
+                    android:text="断连防丢"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/right_disconnect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/icon_right_arrow" />
+
+                <TextView
+                    android:id="@+id/tv_disconnect_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_toStartOf="@id/right_disconnect"
+                    android:text="已开启"
+                    android:textColor="@color/grey_light" />
+            </RelativeLayout>
+
+           <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                   style="@style/setting_item_line"
+                     android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+               /> -->
+            <RelativeLayout
+                android:id="@+id/rl_app_introduction"
+                style="@style/setting_item"
+                android:layout_width="match_parent"
+                 android:layout_height="@dimen/item_setting_height"
+                android:clickable="true" >
+
+                <ImageView
+                    android:id="@+id/img_app_introduction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/setting_app_introduction_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/img_app_introduction"
+                    android:text="应用介绍 "
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/right_app_introduction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/icon_right_arrow" />
+
+               
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                style="@style/setting_item_line"
+                  android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+               />
+            <RelativeLayout
+                android:id="@+id/rl_shutdown"
+                style="@style/setting_item"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_setting_height"
+                android:clickable="true" >
+
+                <ImageView
+                    android:id="@+id/img_shutdown"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/setting_user_quit_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/img_shutdown"
+                    android:text="关闭"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/right_shutdown"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/icon_right_arrow" />
+
+               
+            </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

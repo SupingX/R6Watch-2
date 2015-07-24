@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:clickable="true"
-              android:background="@drawable/selector_bottom_item"
+              android:background="@drawable/selector_bg_bottom_tab"
             android:paddingBottom="8dp" >
 
             <TextView
@@ -31,7 +31,7 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
                 android:text="我的状态"
-                android:textColor="@color/lv"
+                android:textColor="@color/grey_light"
                 android:textSize="12sp" />
 
             <ImageView
@@ -52,7 +52,7 @@
 
         <RelativeLayout
                    android:clickable="true"
-              android:background="@drawable/selector_bottom_item"
+              android:background="@drawable/selector_bg_bottom_tab"
             android:id="@+id/ll_count"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -67,7 +67,7 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
                 android:text="数据统计"
-                android:textColor="@color/lv"
+                android:textColor="@color/grey_light"
                 android:textSize="12sp" />
 
             <ImageView
@@ -83,7 +83,7 @@
 
         <RelativeLayout
                    android:clickable="true"
-              android:background="@drawable/selector_bottom_item"
+              android:background="@drawable/selector_bg_bottom_tab"
             android:id="@+id/ll_setting"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -99,7 +99,7 @@
                 android:layout_marginBottom="0dp"
                 android:gravity="center"
                 android:text="设  置"
-                android:textColor="@color/lv"
+                android:textColor="@color/grey_light"
                 android:textSize="12sp" />
 
             <ImageView

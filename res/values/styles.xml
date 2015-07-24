@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -16,5 +16,18 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
+	
+       <style name="setting_item" >
+           <item name="android:paddingTop">4dp</item>
+           <item name="android:paddingBottom">4dp</item>
+           <item name="android:background">@drawable/selector_bg_setting_item</item>
+           <item name="android:paddingLeft">16dp</item>
+           <item name="android:paddingRight">16dp</item>
+           
+    </style>
 
+       <style name="setting_item_line">
+             <item name="android:background">@drawable/bg_light</item>
+    </style>
+    
 </resources>

@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="${packageName}.${activityClass}" >
+
+	    tools:context="${packageName}.${activityClass}" >
 
     <RelativeLayout
         android:id="@+id/rl_cal_circle"

@@ -3,8 +3,12 @@
 
 <color name="lv">#6F8837</color>
 <color name="grey_light">#A9A9A9</color>
+<color name="orange">#F4A739</color>
+<color name="grey_lighter">#55DDDDDD</color>
 <color name="bottom_bg">#F5EDBC</color>
 <color name="blue">#17B5ED</color>
+<color name="blue_light">#dd17B5ED</color>
+<color name="blue_lighter">#1017B5ED</color>
 <color name="blue_deep">#0D45D8</color>
 <color name="white">#fff</color>
 
