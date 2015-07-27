@@ -37,7 +37,7 @@
             android:id="@+id/bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical" > 
 
             <RelativeLayout
                 android:id="@+id/rl_goal_step"
@@ -435,13 +435,15 @@
                     android:src="@drawable/setting_synchronous_time_button" />
             </RelativeLayout>
 
-           <View
+              <View
                 android:layout_width="match_parent"
-                android:layout_height="12dp"
-                android:background="@drawable/bg_light"
+                android:layout_height="2dp"
+                  style="@style/setting_item_line"
+                    android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                />
 
-            <RelativeLayout
+      <!--       <RelativeLayout
                 android:id="@+id/rl_more"
                 style="@style/setting_item"
                 android:layout_width="match_parent"
@@ -464,22 +466,22 @@
                     android:layout_centerVertical="true"
                     android:text="更多"
                     android:textSize="16sp" />
-            </RelativeLayout>
-            <LinearLayout 
+            </RelativeLayout> -->
+        <!--     <LinearLayout 
                 android:id="@+id/ll_more"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="gone"
-                >
+                > -->
 
-          <View
+        <!--   <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                    style="@style/setting_item_line"
                      android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-               />
+               /> -->
 
             <RelativeLayout
                 android:id="@+id/rl_phone_incoming"
@@ -579,13 +581,13 @@
                     android:textColor="@color/grey_light" />
             </RelativeLayout> -->
 
-           <View
+       <!--     <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
               style="@style/setting_item_line"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-               />
+               /> -->
 
        <!--      <RelativeLayout
                 android:id="@+id/rl_remind"
@@ -848,7 +850,6 @@
                
             </RelativeLayout>
             </LinearLayout>
-        </LinearLayout>
     </ScrollView>
 
 </RelativeLayout>

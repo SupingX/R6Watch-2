@@ -5,52 +5,85 @@
 
 	    tools:context="${packageName}.${activityClass}" >
 
+    <TextView
+        android:id="@+id/tv_cal_complete"
+            android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="已消耗0.0Cal，过低"
+        android:textColor="@color/blue" />
+
+    <!-- <com.mycj.healthy.view.CalProgressBar
+          android:layout_marginTop="16dp"
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/tv_cal_complete"
+        android:layout_centerHorizontal="true"
+        android:max="100"
+        android:progress="0"
+        android:progressDrawable="@drawable/progress_bar" /> -->
+              <com.mycj.healthy.view.ColorSeekBar
+                        android:layout_marginTop="16dp"
+                                android:layout_centerHorizontal="true"
+            android:id="@+id/progress_cal"
+                 android:layout_above="@id/tv_cal_complete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/setting_walk_goal_appraisal_background"
+            android:maxWidth="480dp"
+            android:minWidth="480dp"
+            android:progressDrawable="@null"
+            android:thumb="@drawable/setting_walk_goal_appraisal_coordinate" />
+
     <RelativeLayout
         android:id="@+id/rl_cal_circle"
+        android:layout_above="@id/progress_cal"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp" >
-	<LinearLayout 
-	    android:layout_centerInParent="true"
-	    android:id="@+id/ll_v"
-	    android:layout_width="150dp"
-	    android:layout_height="wrap_content"
-	    android:weightSum="3"
-	    android:orientation="horizontal"
-	    >
-	    
-	    
-	
-        <TextView
-            android:id="@+id/tv_cal_value"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="0.0"
-            android:textStyle="bold"
-            android:gravity="right"
-            android:textColor="@color/blue"
-            android:layout_weight="2"
-            android:textSize="36sp" />
 
-        <TextView
-            android:layout_weight="1"
-            android:id="@+id/tv_cal_unit"
-            android:gravity="center"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/ll_v"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="KCAL"
-              android:textSize="12sp"
-            android:textColor="@color/blue" />
-</LinearLayout>
+            android:layout_centerInParent="true"
+            android:orientation="horizontal"
+            android:weightSum="3" >
+
+            <TextView
+                android:id="@+id/tv_cal_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="right"
+                android:text="1000.0"
+                android:textColor="@color/blue"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_cal_unit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="KCAL"
+                android:textColor="@color/blue"
+                android:textSize="12sp" />
+        </LinearLayout>
+
         <View
             android:id="@+id/line_cal"
             android:layout_width="120dp"
             android:layout_height="2dp"
             android:layout_below="@id/ll_v"
             android:layout_centerHorizontal="true"
-            android:background="@color/blue" >
-        </View>
+            android:background="@color/blue" />
 
         <TextView
             android:id="@+id/tv_cal_info"
@@ -59,36 +92,17 @@
             android:layout_below="@id/line_cal"
             android:layout_centerHorizontal="true"
             android:text="已消耗0.0KCal"
-            android:textColor="@color/blue" />
+            android:textColor="@color/blue" 
+            android:textSize="12dp"
+            />
 
         <ImageView
             android:id="@+id/img_cal_circle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+            android:layout_centerInParent="true"
             android:contentDescription="@string/app_name"
             android:src="@drawable/my_state_calories_round_background" />
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/tv_cal_complete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="已消耗0.0Cal，过低"
-        android:textColor="@color/blue" />
-
-    <com.mycj.healthy.view.CalProgressBar
-          android:layout_marginTop="16dp"
-        android:id="@+id/progress"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/rl_cal_circle"
-        android:layout_centerHorizontal="true"
-        android:max="100"
-        android:progress="0"
-        android:progressDrawable="@drawable/progress_bar" />
 
 </RelativeLayout>

@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -22,6 +26,7 @@ import android.widget.TextView;
 import com.mycj.healthy.fragment.CountFragment;
 import com.mycj.healthy.fragment.InformationFragment;
 import com.mycj.healthy.fragment.SettingFragment;
+import com.mycj.healthy.service.LiteBlueService;
 import com.mycj.healthy.util.ProtoclData;
 
 public class MainActivity extends FragmentActivity implements OnClickListener {
@@ -35,6 +40,18 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private ImageView imgBottomInformation, imgBottomCount, imgBottomSetting;
 	private int currentId;
 
+	private BroadcastReceiver mReceiver = new BroadcastReceiver(){
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if(action.equals(LiteBlueService.LITE_CHARACTERISTIC_CHANGED)){
+				byte [] value = intent.getExtras().getByteArray(LiteBlueService.EXTRA_VALUE);
+				Log.v("MainActivity", "______________________________byte[] value = : " +value);
+			}
+		}
+	};
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -42,6 +59,26 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		initViews();
 		setListener();
 		mRadioGroup.check(R.id.ll_infomation);
+	
+	}
+	
+	@Override
+	protected void onResume() {
+		
+		IntentFilter filter = LiteBlueService.getIntentFilter();
+		registerReceiver(mReceiver, filter);
+		super.onResume();
+	}
+	
+	@Override
+	protected void onPause() {
+		unregisterReceiver(mReceiver);
+		super.onPause();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
 	
 	}
 

@@ -21,9 +21,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.litesuits.bluetooth.conn.ConnectState;
 import com.mycj.healthy.BaseActivity;
 import com.mycj.healthy.BaseApp;
 import com.mycj.healthy.R;
+import com.mycj.healthy.UpdateAsyncTask;
 import com.mycj.healthy.service.LiteBlueService;
 import com.mycj.healthy.ui.SettingAutoHeartRateActivity;
 import com.mycj.healthy.ui.SettingBindedDeviceActivity;
@@ -42,19 +44,26 @@ import com.mycj.healthy.util.Constant;
 import com.mycj.healthy.util.DataUtil;
 import com.mycj.healthy.util.ProtoclData;
 import com.mycj.healthy.util.SharedPreferenceUtil;
+import com.mycj.healthy.view.MyAlertDialog;
 import com.mycj.healthy.view.SleepCountView;
 
 public class SettingFragment extends Fragment implements OnClickListener {
 	private RelativeLayout rlStepGoalSet, rlHeartRateSet, rlSleepTimeSet, rlClockSet, /*
 																					 * rlCameraAndSearchSet
 																					 * ,
-																					 */rlAutoHeartRateSet, rlBindedDevice, rlMore, rlPhoneIncomingSet, /*rlMessageIncomingSet,*/
-	/* rlRemindSet, rlRemindTypeSet, */rlSyncTime, /* rldisconnect, */rlInstoduction, rlShutdown,rlUpdate;
-	private LinearLayout llMore;
+																					 */rlAutoHeartRateSet, rlBindedDevice, /*
+																															 * rlMore
+																															 * ,
+																															 */rlPhoneIncomingSet, /*
+																																					 * rlMessageIncomingSet
+																																					 * ,
+																																					 */
+	/* rlRemindSet, rlRemindTypeSet, */rlSyncTime, /* rldisconnect, */rlInstoduction, rlShutdown, rlUpdate;
+	// private LinearLayout llMore;
 	private ScrollView svSetting;
 	private ImageView imgMore;
 	private boolean isExpan = false;
-	private TextView tvStepGoal, tvHeartRateMax,tvClock,tvAutoHrTest,tvBindDevice,tvIncoming;
+	private TextView tvStepGoal, tvHeartRateMax, tvClock, tvAutoHrTest, tvBindDevice, tvIncoming;
 	private LiteBlueService mLiteBlueService;
 
 	@Override
@@ -71,31 +80,31 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		rlAutoHeartRateSet = (RelativeLayout) view.findViewById(R.id.rl_auto_hr);
 		rlBindedDevice = (RelativeLayout) view.findViewById(R.id.rl_binding);
 		rlUpdate = (RelativeLayout) view.findViewById(R.id.rl_update);
-		rlMore = (RelativeLayout) view.findViewById(R.id.rl_more);
+		// rlMore = (RelativeLayout) view.findViewById(R.id.rl_more);
 		rlPhoneIncomingSet = (RelativeLayout) view.findViewById(R.id.rl_phone_incoming);
-		//rlMessageIncomingSet = (RelativeLayout) view.findViewById(R.id.rl_message);
+		// rlMessageIncomingSet = (RelativeLayout)
+		// view.findViewById(R.id.rl_message);
 		// rlRemindSet = (RelativeLayout) view.findViewById(R.id.rl_remind);
 		// rlRemindTypeSet = (RelativeLayout)
 		// view.findViewById(R.id.rl_remind_type);
 		rlSyncTime = (RelativeLayout) view.findViewById(R.id.rl_sync_time);
-		// rldisconnect = (RelativeLayout) view.findViewById(R.id.rl_disconnect);
+		// rldisconnect = (RelativeLayout)
+		// view.findViewById(R.id.rl_disconnect);
 		rlInstoduction = (RelativeLayout) view.findViewById(R.id.rl_app_introduction);
 		rlShutdown = (RelativeLayout) view.findViewById(R.id.rl_shutdown);
 
 		svSetting = (ScrollView) view.findViewById(R.id.sc_setting);
-		llMore = (LinearLayout) view.findViewById(R.id.ll_more);
-		imgMore = (ImageView) view.findViewById(R.id.img_more);
-		
-		
-		//各种初始状态
+		// llMore = (LinearLayout) view.findViewById(R.id.ll_more);
+		// imgMore = (ImageView) view.findViewById(R.id.img_more);
+
+		// 各种初始状态
 		tvStepGoal = (TextView) view.findViewById(R.id.tv_goal_value);
 		tvHeartRateMax = (TextView) view.findViewById(R.id.tv_max_heart);
 		tvClock = (TextView) view.findViewById(R.id.tv_clock_value);
 		tvAutoHrTest = (TextView) view.findViewById(R.id.tv_auto_hr_value);
 		tvBindDevice = (TextView) view.findViewById(R.id.tv_binding_value);
 		tvIncoming = (TextView) view.findViewById(R.id.tv_phone_incoming_value);
-		
-		
+
 		setListener();
 		mLiteBlueService = ((BaseApp) getActivity().getApplication()).getLiteBlueService();
 		Log.e("", "SettingFragment -- mLiteBlueService : " + mLiteBlueService);
@@ -106,14 +115,14 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	public void onResume() {
 		tvStepGoal.setText("" + (int) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_STEP_GOAL, 0));
 		tvHeartRateMax.setText("" + (int) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_HEART_RATE_MAX, 0));
-		tvClock.setText("" + (int) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_CLOCK_HOUR,0) +":" +
-				(int) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_CLOCK_MIN, 0)+"/"+((boolean) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_CLOCK_ON_OFF, false)?"已开启":"未开启"));
-		tvAutoHrTest.setText((boolean) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_AUTO_HEART_RATE_ON_OFF, false)?"已开启":"未开启");
-		tvAutoHrTest.setText((boolean) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_AUTO_HEART_RATE_ON_OFF, false)?"已开启":"未开启");
+		tvClock.setText("" + (int) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_CLOCK_HOUR, 0) + ":" + (int) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_CLOCK_MIN, 0) + "/"
+				+ ((boolean) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_CLOCK_ON_OFF, false) ? "已开启" : "未开启"));
+		tvAutoHrTest.setText((boolean) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_AUTO_HEART_RATE_ON_OFF, false) ? "已开启" : "未开启");
+		tvAutoHrTest.setText((boolean) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_AUTO_HEART_RATE_ON_OFF, false) ? "已开启" : "未开启");
 		BluetoothDevice device = mLiteBlueService.getCurrentBluetoothDevice();
 		Log.e("SettingFragment", "currentDevice : " + device);
-		tvBindDevice.setText(device!=null?device.getName():"未绑定");
-		tvIncoming.setText((boolean) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_INCOMING_ON_OFF, false)?"已开启":"未开启");
+		tvBindDevice.setText(device != null ? device.getName() : "未绑定");
+		tvIncoming.setText((boolean) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_INCOMING_ON_OFF, false) ? "已开启" : "未开启");
 		super.onResume();
 	}
 
@@ -143,22 +152,28 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			startActivity(new Intent(getActivity(), SettingBindedDeviceActivity.class));
 			break;
 		case R.id.rl_update:
-			if(mLiteBlueService.getCurrentState()!=null&&mLiteBlueService.getCurrentState().getCode()==3){
-				Toast.makeText(getActivity(), "开始同步...", Toast.LENGTH_SHORT).show();;
-			}else {
-				Toast.makeText(getActivity(), "未连接手环...", Toast.LENGTH_SHORT).show();;
+			if (mLiteBlueService.getCurrentState() != null && mLiteBlueService.getCurrentState() == ConnectState.Connected) {
+				mLiteBlueService.writeCharacticsUseConnectListener(ProtoclData.toByteForAutoHeartRateProtocl());
+				UpdateAsyncTask task = new UpdateAsyncTask();
+				// task.execute(null);
+				Toast.makeText(getActivity(), "开始同步...", Toast.LENGTH_SHORT).show();
+				;
+			} else {
+				Toast.makeText(getActivity(), "未连接手环...", Toast.LENGTH_SHORT).show();
+				;
 			}
 			break;
-		case R.id.rl_more:
-			isExpan = !isExpan;
-			updateMore();
-			break;
+		// case R.id.rl_more:
+		// isExpan = !isExpan;
+		// updateMore();
+		// break;
 		case R.id.rl_phone_incoming:
 			startActivity(new Intent(getActivity(), SettingPhoneIncomingActivity.class));
 			break;
-		//case R.id.rl_message:
-		//	startActivity(new Intent(getActivity(), SettingMessageIncmingActivity.class));
-		//	break;
+		// case R.id.rl_message:
+		// startActivity(new Intent(getActivity(),
+		// SettingMessageIncmingActivity.class));
+		// break;
 		// case R.id.rl_remind:
 		// startActivity(new Intent(getActivity(),
 		// SettingRemindActivity.class));
@@ -168,10 +183,12 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		// SettingRemindTypeActivity.class));
 		// break;
 		case R.id.rl_sync_time:
-			if(mLiteBlueService.getCurrentState()!=null&&mLiteBlueService.getCurrentState().getCode()==3){
-				mLiteBlueService.writeCharactics(ProtoclData.toByteForDateProtocl(new Date(), getActivity()));
-			}else {
-				Toast.makeText(getActivity(), "未连接手环...", Toast.LENGTH_SHORT).show();;
+			// if(mLiteBlueService.getCurrentState()!=null&&mLiteBlueService.getCurrentState()==ConnectState.Connected){
+			if (mLiteBlueService.getCurrentState() != null && mLiteBlueService.getCurrentState() == ConnectState.Connected) {
+				mLiteBlueService.writeCharacticsUseConnectListener(ProtoclData.toByteForDateProtocl(new Date(), getActivity()));
+			} else {
+				Toast.makeText(getActivity(), "未连接手环...", Toast.LENGTH_SHORT).show();
+				;
 			}
 			break;
 		// case R.id.rl_disconnect:
@@ -191,15 +208,30 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	}
 
 	private void showdialog() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle("退出？")
-		.setPositiveButton("取消", null).setNegativeButton("确定", null)
-		.setIcon(R.drawable.ic_launcher).create().show();
+		new MyAlertDialog(getActivity()).builder().setTitle("确定推出？").setPositiveButton("确定", new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getActivity().finish();
+				
+				mLiteBlueService.closeAll();
+				mLiteBlueService.setCurrentState(null);
+				mLiteBlueService.setCurrentBluetoothDevice(null);
+				mLiteBlueService=null;
+			}
+		}).setNegativeButton("取消", new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+			}
+		}).show();
+//		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//		builder.setTitle("退出？").setPositiveButton("确定", null).setNegativeButton("取消", null).setIcon(R.drawable.ic_launcher).create().show();
 	}
 
 	private void updateMore() {
 		if (isExpan) {
-			llMore.setVisibility(View.VISIBLE);
+			// llMore.setVisibility(View.VISIBLE);
 			imgMore.setImageResource(R.drawable.setting_advanced_option_icon);
 			svSetting.post(new Runnable() {
 				@Override
@@ -209,7 +241,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			});
 
 		} else {
-			llMore.setVisibility(View.GONE);
+			// llMore.setVisibility(View.GONE);
 			imgMore.setImageResource(R.drawable.setting_advanced_option_icon_open);
 			// svSetting.fullScroll(ScrollView.FOCUS_UP);//滚动到顶部
 		}
@@ -223,9 +255,9 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		// rlCameraAndSearchSet.setOnClickListener(this);
 		rlAutoHeartRateSet.setOnClickListener(this);
 		rlBindedDevice.setOnClickListener(this);
-		rlMore.setOnClickListener(this);
+		// rlMore.setOnClickListener(this);
 		rlPhoneIncomingSet.setOnClickListener(this);
-//		rlMessageIncomingSet.setOnClickListener(this);
+		// rlMessageIncomingSet.setOnClickListener(this);
 		// rlRemindSet.setOnClickListener(this);
 		// rlRemindTypeSet.setOnClickListener(this);
 		rlSyncTime.setOnClickListener(this);

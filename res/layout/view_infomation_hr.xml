@@ -8,6 +8,7 @@
 
     <TextView
         android:id="@+id/tv_hr_info"
+       android:padding="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -15,22 +16,36 @@
         android:text="当前心率 	: 过低 "
         android:textColor="@color/blue" />
 
-    <com.mycj.healthy.view.CalProgressBar
+    <!-- <com.mycj.healthy.view.CalProgressBar
+             android:layout_marginTop="16dp"
         android:id="@+id/progress_hr"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/tv_hr_info"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
         android:max="100"
         android:progress="30"
-        android:progressDrawable="@drawable/progress_bar" />
+        android:progressDrawable="@drawable/progress_bar" /> -->
+               <com.mycj.healthy.view.ColorSeekBar
+                        android:layout_marginTop="16dp"
+                                android:layout_centerHorizontal="true"
+            android:id="@+id/progress_hr"
+                 android:layout_above="@id/tv_hr_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/setting_walk_goal_appraisal_background"
+            android:maxWidth="480dp"
+            android:minWidth="480dp"
+            android:progressDrawable="@null"
+            android:thumb="@drawable/setting_walk_goal_appraisal_coordinate" />
     
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" 
         android:layout_above="@id/progress_hr"
+         android:layout_marginTop="10dp" 
         
         >
 
