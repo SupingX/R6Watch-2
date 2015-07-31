@@ -15,11 +15,11 @@
             android:layout_height="36dp"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="我的状态"
+            android:text="@string/main_tab_my"
             android:textColor="@color/white"
             android:textSize="20sp" />
 
-        <ImageView
+       <!--  <ImageView
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentRight="true"
@@ -28,7 +28,7 @@
             android:clickable="true"
             android:contentDescription="@string/app_name"
             android:padding="12dp"
-            android:src="@drawable/my_state_information_upload_icon" />
+            android:src="@drawable/my_state_information_upload_icon" /> -->
     </RelativeLayout>
       <View
             android:layout_width="match_parent"
@@ -92,7 +92,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
                         android:orientation="vertical"
                         android:weightSum="2" >
 
@@ -101,7 +100,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="bottom"
-                            android:text="步数"
+                            android:text="@string/info_step"
                             android:textColor="#000"
                             android:textSize="16sp" />
 
@@ -111,7 +110,6 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="top"
-                            android:text="0步"
                             android:textColor="@color/grey_light"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -136,7 +134,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
                         android:orientation="vertical"
                         android:weightSum="2" >
 
@@ -145,7 +142,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="bottom"
-                            android:text="距离"
+                            android:text="@string/info_distance"
                             android:textColor="#000"
                             android:textSize="16sp" />
 
@@ -155,7 +152,6 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="top"
-                            android:text="0千米"
                             android:textColor="@color/grey_light"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -180,7 +176,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
                         android:orientation="vertical"
                         android:weightSum="2" >
 
@@ -189,7 +184,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="bottom"
-                            android:text="消耗能量"
+                            android:text="@string/info_cal"
                             android:textColor="#000"
                             android:textSize="16sp" />
 
@@ -199,7 +194,6 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="top"
-                            android:text="0千卡"
                             android:textColor="@color/grey_light"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -224,7 +218,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
                         android:orientation="vertical"
                         android:weightSum="2" >
 
@@ -233,7 +226,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="bottom"
-                            android:text="心率"
+                            android:text="@string/info_heart"
                             android:textColor="#000"
                             android:textSize="16sp" />
 
@@ -243,7 +236,6 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="top"
-                            android:text="0/分钟"
                             android:textColor="@color/grey_light"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -289,7 +281,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
                         android:orientation="vertical"
                         android:weightSum="2" >
 
@@ -298,7 +289,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="bottom"
-                            android:text="睡眠"
+                            android:text="@string/sleep"
                             android:textColor="#000"
                             android:textSize="16sp" />
 
@@ -308,7 +299,6 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="top"
-                            android:text="0.0小时"
                             android:textColor="@color/grey_light"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -332,7 +322,6 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:weightSum="2" >
@@ -342,7 +331,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="bottom"
-                            android:text="午休"
+                            android:text="@string/siesta"
                             android:textColor="#000"
                             android:textSize="16sp" />
 
@@ -352,7 +341,6 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="top"
-                            android:text="0.0小时"
                             android:textColor="@color/grey_light"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -377,7 +365,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
                         android:orientation="vertical"
                         android:weightSum="2" >
 
@@ -386,7 +373,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="bottom"
-                            android:text="小憩"
+                            android:text="@string/nap"
                             android:textColor="#000"
                             android:textSize="16sp" />
 
@@ -396,7 +383,6 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="top"
-                            android:text="0.0小时"
                             android:textColor="@color/grey_light"
                             android:textSize="12sp" />
                     </LinearLayout>

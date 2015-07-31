@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:gravity="center"
-            android:text="设置"
+            android:text="@string/setting"
             android:textColor="@color/white"
             android:textSize="20sp" />
     </LinearLayout>
@@ -61,7 +61,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/img_goal_step"
-                    android:text="步数目标设置"
+                    android:text="@string/target_step"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -80,7 +80,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="20dp"
                     android:layout_toStartOf="@id/right_step"
-                    android:text="25523步"
                     android:textColor="@color/grey_light" />
             </RelativeLayout>
 
@@ -114,7 +113,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/img_max_heart"
-                    android:text="心率最大值"
+                    android:text="@string/max_heart"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -133,7 +132,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="20dp"
                     android:layout_toStartOf="@id/right_heart"
-                    android:text="25523步"
                     android:textColor="@color/grey_light" />
             </RelativeLayout>
 
@@ -167,7 +165,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/img_sleep_time"
-                    android:text="睡眠时间"
+                    android:text="@string/sleep"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -210,7 +208,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/img_clock"
-                    android:text="闹钟"
+                    android:text="@string/watch_alarm"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -229,7 +227,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="20dp"
                     android:layout_toStartOf="@id/right_clock"
-                    android:text="12:00"
                     android:textColor="@color/grey_light" />
             </RelativeLayout>
 
@@ -316,7 +313,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/img_auto_hr"
-                    android:text="自动心率测试"
+                    android:text="@string/auto_hr_detection"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -335,7 +332,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="20dp"
                     android:layout_toStartOf="@id/right_auto_hr"
-                    android:text="已开启"
                     android:textColor="@color/grey_light" />
             </RelativeLayout>
 
@@ -369,7 +365,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/img_binding"
-                    android:text="绑定设备"
+                    android:text="@string/binding_equipment"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -388,7 +384,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="20dp"
                     android:layout_toStartOf="@id/right_binding"
-                    android:text="未绑定"
                     android:textColor="@color/grey_light" />
             </RelativeLayout>
 
@@ -422,7 +417,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/img_update"
-                    android:text="同步所有数据"
+                    android:text="@string/sync_data"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -505,7 +500,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/img_phone_incoming"
-                    android:text="来电提示"
+                    android:text="@string/call_msg_reminder"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -524,7 +519,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="20dp"
                     android:layout_toStartOf="@id/right_phone_incoming"
-                    android:text="已开启"
                     android:textColor="@color/grey_light" />
             </RelativeLayout>
 
@@ -696,7 +690,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/img_sync_time"
-                    android:text="同步手表时间"
+                    android:text="@string/sync_time"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -791,7 +785,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/img_app_introduction"
-                    android:text="应用介绍 "
+                    android:text="@string/introduce"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -835,7 +829,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/img_shutdown"
-                    android:text="关闭"
+                    android:text="@string/exit"
                     android:textSize="16sp" />
 
                 <ImageView

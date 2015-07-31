@@ -13,7 +13,7 @@ public class StepCircle extends View {
 	private float width = 12;
 	private Paint paintCicle;
 	private Paint paintArc;
-	private int maxProgress=100; // 最大进度(总步数)
+	private int maxProgress = 100; // 最大进度(总步数)
 	private int progress;// 当前进度（当前步数）
 	private RectF arcRect;// 圆环的区域
 	private float startAngle = -90;
@@ -36,10 +36,10 @@ public class StepCircle extends View {
 		super(context, attrs);
 		init();
 	}
-	
 
 	/**
 	 * 根据进度得到角度
+	 * 
 	 * @param progress
 	 * @return
 	 */
@@ -48,20 +48,21 @@ public class StepCircle extends View {
 		angle = 360 * progress / maxProgress;
 		return angle;
 	}
-	
+
 	private void init() {
 		paintCicle = new Paint();
 		paintCicle.setAntiAlias(true);
 		paintCicle.setStrokeWidth(width);
 		paintCicle.setStyle(Paint.Style.STROKE);
 		paintCicle.setColor(getResources().getColor(R.color.grey_light));
+		paintCicle.setStrokeCap(Paint.Cap.ROUND);// 设置圆角
 
 		paintArc = new Paint();
 		paintArc.setAntiAlias(true);
 		paintArc.setStrokeWidth(width);
 		paintArc.setStyle(Paint.Style.STROKE);
 		paintArc.setColor(getResources().getColor(R.color.blue));
-
+		paintArc.setStrokeCap(Paint.Cap.ROUND);// 设置圆角
 	}
 
 	@Override
@@ -72,10 +73,10 @@ public class StepCircle extends View {
 	}
 
 	private void initArcRect() {
-		float left = centerX-radius;
-		float top = width/2;
-		float right = centerX+radius;
-		float bottom = centerY*2-width/2;
+		float left = centerX - radius;
+		float top = width / 2;
+		float right = centerX + radius;
+		float bottom = centerY * 2 - width / 2;
 		arcRect = new RectF(left, top, right, bottom);
 	}
 
@@ -90,33 +91,32 @@ public class StepCircle extends View {
 		initArcRect();
 		canvas.drawArc(arcRect, startAngle, toAngle(progress), false, paintArc);
 	}
-	
-	public void setProgress(int step){
-		if(step<0){
-			step=0;
+
+	public void setProgress(int step) {
+		if (step < 0) {
+			step = 0;
 		}
-		if(step>maxProgress){
-			step=maxProgress;
-		}
-		
+
 		this.progress = step;
-		if(mOnProgressChange!=null){
+		if (mOnProgressChange != null) {
 			mOnProgressChange.onChange(progress);
 		}
 		invalidate();
 	}
-	public void setMaxProgress(int maxStep){
+
+	public void setMaxProgress(int maxStep) {
 		this.maxProgress = maxStep;
 		invalidate();
 	}
-	
+
 	public interface OnProgressChange {
 		public void onChange(int progress);
 	}
-	
+
 	private OnProgressChange mOnProgressChange;
-	public void setOnProgressChange(OnProgressChange l){
+
+	public void setOnProgressChange(OnProgressChange l) {
 		this.mOnProgressChange = l;
 	}
-	
+
 }

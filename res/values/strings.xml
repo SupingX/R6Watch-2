@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">HealthySport</string>
+    <string name="app_name">R6 Watch</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_step_goal">StepGoalActivity</string>
     <string name="title_activity_setting_heart_rate_set">SettingHeartRateSetActivity</string>
@@ -16,5 +16,87 @@
     <string name="title_activity_setting_remind_type_set">SettingRemindTypeSetActivity</string>
     <string name="title_activity_setting_disconnect">SettingDisconnectActivity</string>
     <string name="title_activity_introduce_app">IntroduceAppActivity</string>
+
+    <!-- MainActivity -->
+    <string name="main_tab_my">My</string>
+    <string name="main_tab_data">Data</string>
+    <string name="main_tab_setting">Setting</string>
+    <!-- SettingAutoHeartRateActivity -->
+    <string name="auto_hr_detection">Auto Heartbeat Detection</string>
+    <string name="auto_hr_info">Dear,once this function be opened,the watch will atuomatically test heart rate within the given time.</string>
+    <string name="connected_watch">Connected Watch</string>
+    <string name="device_none">None</string>
+    <string name="other_watch">Other Wather</string>
+    <string name="binding_equipment">Binding Equipment</string>
+    <!-- settingClockSetActivity -->
+    <string name="watch_alarm">Watch Alarm</string>
+    <string name="alarm_time">Alarm time</string>
+    <string name="alarm_info">Dear,once the alarm clock setting is completed,the connected watch will have specified time corresponding hint according to the your setting.</string>
+    <!-- SettingHeartRateSetActivity -->
+    <string name="allow_the_maximum_heart">Allow the maximum heart</string>
+    <string name="bpm">/bpm</string>
+    <string name="max_hr_info">Dear,the maximum heart rate can only be between 40 and 200.Once the maximum heart setting is completeed,it will be synchrinized to watch.</string>
+    <string name="max_heart">Maximum Heartbeat</string>
+    <!-- SettingPhoneIncomingActivity -->
+    <string name="call_msg_reminder">Call/Message reminder</string>
+    <string name="incoming_info">Dear,once this function be opened,the connected watch will have corresponding hint when you get an incoming call or message.</string>
+    <!-- SettingSleepTimeSetActivity -->
+    <string name="siesta_time_set">Siesta time set</string>
+    <string name="siesta_start">Siesta start</string>
+    <string name="siesta_over">Siesta over</string>
+    <string name="sleep_time_set">Sleep time set</string>
+    <string name="sleep_start">Sleep start</string>
+    <string name="sleep_over">Sleep over</string>
+    <string name="sleep_info">Dear,because of the convenience of the rest data systematically,please don\'t set the overlap of time to rest.</string>
+    <string name="sleep">Sleep</string>
+    <!-- SettingStepGoalActivity -->
+    <string name="target_step">Target step</string>
+    <string name="target_step_title">Target Step</string>
+    <string name="exercise_evaluation">Exercise_evaluation:</string>
+    <string name="step">step</string>
+    <string name="step_info">Dear,the target steps are limited to between 500 and 99990.Once the targetsteps setting is completed,it will be synchronized to watch and watch began to step.</string>
+    <string name="gold_step">The target number : </string>
+    <string name="unbinding_model">Random Patterns</string>
+    <string name="complete_step">Complete : </string>
+      <string name="sleep_tips"> Sleep : </string>
+     <string name="siesta_tips">Siesta : </string>
+     <string name="nap_tips">Nap : </string>
+     
+        <string name="low">Low</string>
+    <string name="nomal">Normal</string>
+    <string name="high">High</string>
+    <string name="sport">Sport</string>
+        <string name="hr_value">Current Heart Rate : </string> 
+        
+           <string name="sleep_eval">Sleep evaluation : </string>
+    <string name="siesta_eval">Siesta evaluation : </string>
+    <string name="nap_eval">Nap evaluation : </string>
+    
+    <string name="eval_sleep_leak">Lack of sleep</string>
+    <string name="eval_sleep_normal">Normal</string>
+    <string name="eval_sleep_high">Busy</string>
+
+    <!-- InformationFragment -->
+    <string name="info_step">Step</string>
+    <string name="info_distance">Distance</string>
+    <string name="info_cal">Consume</string>
+    <string name="info_heart">Heart Rate</string>
+    <string name="siesta">Siesta</string>
+    <string name="nap">Nap</string>
+    <string name="target_distance">Target distance : </string>
+  <string name="complete_distance">Complete : </string>
+      <string name="target_cal">Target : </string>
+          <string name="complete_cal">Consumed : </string>
+           <string name="hour">hours</string> 
+          
+    <!-- SettingFragment -->
+    <string name="setting">Setting</string>
+    <string name="sync_data">Sync Data</string>
+    <string name="sync_time">Sync time</string>
+    <string name="introduce">Introduce</string>
+    <string name="exit">Exit</string>
+    <string name="cancel">Cancel</string>
+    <string name="goal_step">The target number:</string>
+    <string name="title_activity_heart_rate_count">HeartRateCountActivity</string>
 
 </resources>

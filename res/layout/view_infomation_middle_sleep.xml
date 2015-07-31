@@ -16,13 +16,11 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentLeft="true"
-	        android:text="22:00-->07:00"
 	        />
 	    <TextView
 	        android:id="@+id/tv_sleep_middle_adv"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="午休评价	: 不足"
 	        android:layout_alignParentRight="true"
 	        />
 	</RelativeLayout>
@@ -40,12 +38,12 @@
 	    
 	    ></com.mycj.healthy.view.GreyCircle>
 	    <TextView
-	        android:id="@+id/tv_sleep_count_info"
+	        android:id="@+id/tv_sleep_middle_info"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentBottom="true"
 	        android:layout_centerHorizontal="true"
 	        android:textColor="@color/blue"
-	        android:text="午休：0.0小时 " />
+	         />
 
 </RelativeLayout>

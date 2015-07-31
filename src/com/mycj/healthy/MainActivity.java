@@ -19,15 +19,21 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.litesuits.bluetooth.conn.ConnectState;
 import com.mycj.healthy.fragment.CountFragment;
 import com.mycj.healthy.fragment.InformationFragment;
 import com.mycj.healthy.fragment.SettingFragment;
+import com.mycj.healthy.service.IncomingService;
 import com.mycj.healthy.service.LiteBlueService;
+import com.mycj.healthy.util.Constant;
+import com.mycj.healthy.util.DataUtil;
 import com.mycj.healthy.util.ProtoclData;
+import com.mycj.healthy.util.SharedPreferenceUtil;
 
 public class MainActivity extends FragmentActivity implements OnClickListener {
 	private ViewPager mViewPager;
@@ -40,59 +46,80 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private ImageView imgBottomInformation, imgBottomCount, imgBottomSetting;
 	private int currentId;
 
-	private BroadcastReceiver mReceiver = new BroadcastReceiver(){
+	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			if(action.equals(LiteBlueService.LITE_CHARACTERISTIC_CHANGED)){
-				byte [] value = intent.getExtras().getByteArray(LiteBlueService.EXTRA_VALUE);
-				Log.v("MainActivity", "______________________________byte[] value = : " +value);
+			if (action.equals(LiteBlueService.LITE_CHARACTERISTIC_CHANGED)) {
+				byte[] value = intent.getExtras().getByteArray(LiteBlueService.EXTRA_VALUE);
+				Log.v("MainActivity", "______________________________byte[] value = : " + DataUtil.getStringByBytes(value));
 			}
 		}
 	};
-	
+
+	private InformationFragment informationFrag;
+	private CountFragment countFrag;
+	private SettingFragment settingFrag;
+	private LiteBlueService mLiteBlueService;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		initViews();
 		setListener();
-		mRadioGroup.check(R.id.ll_infomation);
-	
-	}
-	
-	@Override
-	protected void onResume() {
-		
+		mRadioGroup.check(R.id.rl_infomation);
 		IntentFilter filter = LiteBlueService.getIntentFilter();
 		registerReceiver(mReceiver, filter);
-		super.onResume();
+		mLiteBlueService = ((BaseApp) getApplication()).getLiteBlueService();
+
 	}
-	
+
+	private void firstEnter() {
+		if (!mLiteBlueService.isEnable()) {
+			Toast.makeText(MainActivity.this, "请打开蓝牙", Toast.LENGTH_SHORT).show();
+			// mLiteBlueService.enable(MainActivity.this);
+		} else {
+			if (mLiteBlueService != null) {
+				mLiteBlueService.stopScanUsePeriodScanCallback();
+				mLiteBlueService.startScanUsePeriodScanCallback();
+			}
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		firstEnter();
+		super.onResume();
+
+	}
+
 	@Override
 	protected void onPause() {
-		unregisterReceiver(mReceiver);
 		super.onPause();
+
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-	
+		unregisterReceiver(mReceiver);
+
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.ll_infomation:
-			mRadioGroup.check(R.id.ll_infomation);
+		case R.id.rl_infomation:
+			mRadioGroup.check(R.id.rl_infomation);
+
 			break;
-		case R.id.ll_count:
-			mRadioGroup.check(R.id.ll_count);
+		case R.id.rl_count:
+			mRadioGroup.check(R.id.rl_count);
 			break;
-		case R.id.ll_setting:
-			mRadioGroup.check(R.id.ll_setting);
+		case R.id.rl_setting:
+			mRadioGroup.check(R.id.rl_setting);
 			break;
 
 		default:
@@ -103,38 +130,58 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private void initViews() {
 		// viewPager
 		mViewPager = (ViewPager) findViewById(R.id.vp);
-		InformationFragment informationFrag  = new InformationFragment(); 
-//		Information2Fragment informationFrag2  = new Information2Fragment(); 
-		CountFragment countFrag  = new CountFragment(); 
-		SettingFragment settingFrag  = new SettingFragment(); 
-		listFrags = new ArrayList<>();
-		listFrags.add(informationFrag);
-//		listFrags.add(informationFrag2);
-		listFrags.add(countFrag);
-		listFrags.add(settingFrag);
-		
+		informationFrag = new InformationFragment();
+		countFrag = new CountFragment();
+		settingFrag = new SettingFragment();
+		// listFrags = new ArrayList<>();
+		// listFrags.add(informationFrag);
+		// // listFrags.add(informationFrag2);
+		// listFrags.add(countFrag);
+		// listFrags.add(settingFrag);
+
 		mViewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
 			@Override
 			public int getCount() {
-				return listFrags.size();
+				// return listFrags.size();
+				return 3;
 			}
+
 			@Override
 			public Fragment getItem(int position) {
-				return listFrags.get(position);
+				// return listFrags.get(position);
+				switch (position) {
+				case 0:
+					if (informationFrag == null) {
+						informationFrag = new InformationFragment();
+					}
+					return informationFrag;
+				case 1:
+					if (countFrag == null) {
+						countFrag = new CountFragment();
+					}
+					return countFrag;
+				case 2:
+					if (settingFrag == null) {
+						settingFrag = new SettingFragment();
+					}
+					return settingFrag;
+				default:
+					break;
+				}
+				return null;
 			}
 		});
 		mViewPager.setCurrentItem(0);
-
 		initBottom();
 
 	}
-	
-	private void initBottom(){
+
+	private void initBottom() {
 		// 底部Bottom
 		mRadioGroup = (RadioGroup) findViewById(R.id.rg_bottom);
-		mRelativeLayoutInformation = (RelativeLayout) findViewById(R.id.ll_infomation);
-		mRelativeLayoutCount = (RelativeLayout) findViewById(R.id.ll_count);
-		mRelativeLayoutSetting = (RelativeLayout) findViewById(R.id.ll_setting);
+		mRelativeLayoutInformation = (RelativeLayout) findViewById(R.id.rl_infomation);
+		mRelativeLayoutCount = (RelativeLayout) findViewById(R.id.rl_count);
+		mRelativeLayoutSetting = (RelativeLayout) findViewById(R.id.rl_setting);
 		tvBottomCount = (TextView) findViewById(R.id.tv_count);
 		tvBottomSetting = (TextView) findViewById(R.id.tv_setting);
 		tvBottomInformation = (TextView) findViewById(R.id.tv_infomation);
@@ -142,7 +189,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		imgBottomCount = (ImageView) findViewById(R.id.img_count);
 		imgBottomSetting = (ImageView) findViewById(R.id.img_setting);
 	}
-	
+
 	/**
 	 * 为各个view添加listener
 	 */
@@ -153,23 +200,24 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		setRadioGroupListener();
 		setViewpagerListener();
 	}
+
 	/**
 	 * 底部radioRroup 选中事件
 	 */
-	private void setRadioGroupListener(){
+	private void setRadioGroupListener() {
 		mRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				switch (checkedId) {
-				case R.id.ll_infomation:
-					Log.e("redioGroup", "我的状态 :" + (mRadioGroup.getCheckedRadioButtonId() == R.id.ll_infomation));
+				case R.id.rl_infomation:
+					Log.e("redioGroup", "我的状态 :" + (mRadioGroup.getCheckedRadioButtonId() == R.id.rl_infomation));
 					mViewPager.setCurrentItem(0);
 					break;
-				case R.id.ll_count:
+				case R.id.rl_count:
 					Log.e("redioGroup", "统计" + mRadioGroup.getCheckedRadioButtonId());
 					mViewPager.setCurrentItem(1);
 					break;
-				case R.id.ll_setting:
+				case R.id.rl_setting:
 					Log.e("redioGroup", "设置" + mRadioGroup.getCheckedRadioButtonId());
 					mViewPager.setCurrentItem(2);
 					break;
@@ -181,62 +229,64 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			}
 		});
 	}
+
 	/**
 	 * viewPager 切换页面事件
 	 */
-	private void setViewpagerListener(){
+	private void setViewpagerListener() {
 		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
-			
+
 			@Override
 			public void onPageSelected(int arg0) {
 				switch (arg0) {
 				case 0:
-					mRadioGroup.check(R.id.ll_infomation);
+					mRadioGroup.check(R.id.rl_infomation);
 					break;
 				case 1:
-					mRadioGroup.check(R.id.ll_count);
+					mRadioGroup.check(R.id.rl_count);
 					break;
 				case 2:
-					mRadioGroup.check(R.id.ll_setting);
+					mRadioGroup.check(R.id.rl_setting);
 					break;
 
 				default:
 					break;
 				}
 			}
+
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
 			}
-			
+
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
 			}
 		});
 	}
-	
+
 	/**
 	 * 底部radioGroup视图改变
 	 */
 	private void updateRadioGroupChecked() {
 		int selected = getResources().getColor(R.color.blue);
 		switch (mRadioGroup.getCheckedRadioButtonId()) {
-		case R.id.ll_infomation:
+		case R.id.rl_infomation:
 			tvBottomInformation.setTextColor(selected);
 			imgBottomInformation.setImageResource(R.drawable.my_state_button_on);
 			updateCurrentItem();
-			currentId = R.id.ll_infomation;
+			currentId = R.id.rl_infomation;
 			break;
-		case R.id.ll_count:
+		case R.id.rl_count:
 			tvBottomCount.setTextColor(selected);
 			imgBottomCount.setImageResource(R.drawable.statistics_button_on);
 			updateCurrentItem();
-			currentId = R.id.ll_count;
+			currentId = R.id.rl_count;
 			break;
-		case R.id.ll_setting:
+		case R.id.rl_setting:
 			tvBottomSetting.setTextColor(selected);
 			imgBottomSetting.setImageResource(R.drawable.setting_button_on);
 			updateCurrentItem();
-			currentId = R.id.ll_setting;
+			currentId = R.id.rl_setting;
 			break;
 		default:
 
@@ -250,15 +300,15 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private void updateCurrentItem() {
 		int unselected = getResources().getColor(R.color.grey_light);
 		switch (currentId) {
-		case R.id.ll_infomation:
+		case R.id.rl_infomation:
 			tvBottomInformation.setTextColor(unselected);
 			imgBottomInformation.setImageResource(R.drawable.my_state_button);
 			break;
-		case R.id.ll_count:
+		case R.id.rl_count:
 			tvBottomCount.setTextColor(unselected);
 			imgBottomCount.setImageResource(R.drawable.statistics_button);
 			break;
-		case R.id.ll_setting:
+		case R.id.rl_setting:
 			tvBottomSetting.setTextColor(unselected);
 			imgBottomSetting.setImageResource(R.drawable.setting_button);
 			break;

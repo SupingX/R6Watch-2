@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="当前心率 	: 过低 "
         android:textColor="@color/blue" />
 
     <!-- <com.mycj.healthy.view.CalProgressBar
@@ -42,6 +41,7 @@
             android:thumb="@drawable/setting_walk_goal_appraisal_coordinate" />
     
     <RelativeLayout
+        android:id="@+id/rl_hr"
         android:layout_width="match_parent"
         android:layout_height="match_parent" 
         android:layout_above="@id/progress_hr"
@@ -76,7 +76,7 @@
                 android:id="@+id/tv_hr_per_min"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" / 分钟"
+                android:text=" bpm"
                 android:textColor="@color/blue" />
         </LinearLayout>
 

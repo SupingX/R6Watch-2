@@ -111,7 +111,7 @@ public class DistanceView extends View {
 			// y-50-radio-bitmapPerson.getHeight(),mBitmapPaint );
 			canvas.drawBitmap(bitmapPerson, getDistanceWith() - bitmapPerson.getWidth() + widthShort * 3 / 2, y - 50 - radio - bitmapPerson.getHeight(), mBitmapPaint);
 		}
-		//初始化数字
+		// 初始化数字
 		String[] ruler = initText();
 		for (int i = 0; i < 12; i++) {
 			// 画小点点
@@ -169,11 +169,11 @@ public class DistanceView extends View {
 	}
 
 	public void setMaxDistance(float maxDistance) {
-		if (maxDistance<currentDistance) {
+		if (maxDistance < currentDistance) {
 			maxDistance = currentDistance;
 		}
-		if (maxDistance<0) {
-			maxDistance=100;
+		if (maxDistance < 0) {
+			maxDistance = 100;
 		}
 		this.maxDistance = maxDistance;
 		if (mOnDistanceChange != null) {
@@ -212,6 +212,7 @@ public class DistanceView extends View {
 
 	public interface OnDistanceChange {
 		public void onChange(float distance);
+
 		public void onMaxDistanceChange(float max);
 	}
 
