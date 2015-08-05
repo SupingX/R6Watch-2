@@ -12,6 +12,12 @@
 <color name="blue_deep">#0D45D8</color>
 <color name="white">#fff</color>
 <color name="grey_bg">#efeff4</color>
+<color name="count_bg_selected">#6700F3</color>
+<color name="count_bg_unselected">#A1E6FF</color>
+<color name="count_step">#FF7100</color>
+<color name="green">#116F4B</color>
+
+
 
 
     <color name="trans">#00000000</color>

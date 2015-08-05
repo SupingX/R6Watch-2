@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+        android:background="@color/white"
+    tools:context="${relativePackage}.${activityClass}" >
+
+      <include
+        android:id="@+id/top_title"
+        layout="@layout/top_title" >
+    </include>
+    <RelativeLayout 
+	    android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:padding="12dp"
+	    >
+
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_centerVertical="true"
+	        android:text="@string/auto_hr_detection"
+	        android:textSize="16sp" />
+	    
+	         <CheckBox
+            android:id="@+id/cb_auto_hr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:button="@drawable/selector_bg_checkbox"
+            android:checked="false"
+            android:clickable="true" />
+
+	</RelativeLayout>
+	<View
+        android:layout_width="match_parent"
+        android:background="@color/grey_bg"
+        android:layout_height="16dp" />
+	   <TextView
+	       android:padding="12dp"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/auto_hr_info"
+	        android:textSize="16sp" />
+</LinearLayout>

@@ -51,9 +51,16 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			if (action.equals(LiteBlueService.LITE_CHARACTERISTIC_CHANGED)) {
-				byte[] value = intent.getExtras().getByteArray(LiteBlueService.EXTRA_VALUE);
-				Log.v("MainActivity", "______________________________byte[] value = : " + DataUtil.getStringByBytes(value));
+			if (action.equals(LiteBlueService.LITE_BLUETOOTH_NOT_OPEN)) {
+	
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(MainActivity.this, "蓝牙未打开", Toast.LENGTH_SHORT).show();
+					}
+				});
+				} else if (action.equals(LiteBlueService.LITE_GATT_CONNECTED)) {
+					
 			}
 		}
 	};
@@ -67,18 +74,19 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		mLiteBlueService = ((BaseApp) getApplication()).getLiteBlueService();
 		initViews();
 		setListener();
 		mRadioGroup.check(R.id.rl_infomation);
 		IntentFilter filter = LiteBlueService.getIntentFilter();
 		registerReceiver(mReceiver, filter);
-		mLiteBlueService = ((BaseApp) getApplication()).getLiteBlueService();
+
 
 	}
 
 	private void firstEnter() {
 		if (!mLiteBlueService.isEnable()) {
-			Toast.makeText(MainActivity.this, "请打开蓝牙", Toast.LENGTH_SHORT).show();
+			Toast.makeText(MainActivity.this, "蓝牙未开启...", Toast.LENGTH_SHORT).show();
 			// mLiteBlueService.enable(MainActivity.this);
 		} else {
 			if (mLiteBlueService != null) {
@@ -133,11 +141,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		informationFrag = new InformationFragment();
 		countFrag = new CountFragment();
 		settingFrag = new SettingFragment();
-		// listFrags = new ArrayList<>();
-		// listFrags.add(informationFrag);
-		// // listFrags.add(informationFrag2);
-		// listFrags.add(countFrag);
-		// listFrags.add(settingFrag);
+		listFrags = new ArrayList<>();
+		listFrags.add(informationFrag);
+		listFrags.add(countFrag);
+		listFrags.add(settingFrag);
 
 		mViewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
 			@Override
@@ -148,29 +155,31 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 			@Override
 			public Fragment getItem(int position) {
+				return listFrags.get(position);
 				// return listFrags.get(position);
-				switch (position) {
-				case 0:
-					if (informationFrag == null) {
-						informationFrag = new InformationFragment();
-					}
-					return informationFrag;
-				case 1:
-					if (countFrag == null) {
-						countFrag = new CountFragment();
-					}
-					return countFrag;
-				case 2:
-					if (settingFrag == null) {
-						settingFrag = new SettingFragment();
-					}
-					return settingFrag;
-				default:
-					break;
-				}
-				return null;
+				// switch (position) {
+				// case 0:
+				// if (informationFrag == null) {
+				// informationFrag = new InformationFragment();
+				// }
+				// return informationFrag;
+				// case 1:
+				// if (countFrag == null) {
+				// countFrag = new CountFragment();
+				// }
+				// return countFrag;
+				// case 2:
+				// if (settingFrag == null) {
+				// settingFrag = new SettingFragment();
+				// }
+				// return settingFrag;
+				// default:
+				// break;
+				// }
+				// return null;
 			}
 		});
+		mViewPager.setOffscreenPageLimit(3);
 		mViewPager.setCurrentItem(0);
 		initBottom();
 

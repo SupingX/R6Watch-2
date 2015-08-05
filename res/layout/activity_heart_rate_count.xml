@@ -1,0 +1,53 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <RelativeLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/blue" >
+
+        <ImageView
+                  android:id="@+id/img_back"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:background="@drawable/selector_bg_settting_top"
+            android:clickable="true"
+            android:padding="6dp"
+            android:src="@drawable/ic_action_previous_item" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="心率统计"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+<!--     <com.mycj.healthy.view.SimpleHeartRateView
+        android:id="@+id/hrv"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="#000"
+        >
+    </com.mycj.healthy.view.SimpleHeartRateView> -->
+    <com.mycj.healthy.view.HeartRateFrameLayout
+        android:id="@+id/frame_heartrate"
+        android:layout_height="200dp"
+        android:layout_width="match_parent"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="add"
+        android:text="test" />
+
+
+</LinearLayout>

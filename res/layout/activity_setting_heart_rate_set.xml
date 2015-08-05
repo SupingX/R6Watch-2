@@ -1,0 +1,69 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+        android:background="@color/white"
+    tools:context="${relativePackage}.${activityClass}" >
+
+ <include
+        android:id="@+id/top_title"
+        layout="@layout/top_title" >
+    </include>
+    
+	<RelativeLayout 
+	    android:paddingLeft="12dp"
+	    android:paddingRight="12dp"
+	    android:paddingTop="8dp"
+		android:paddingBottom="8dp"
+	    android:layout_height="wrap_content"
+	    android:layout_width="match_parent"
+	    >
+	    
+	       <TextView
+	           android:layout_width="wrap_content"
+	           android:layout_height="wrap_content"
+	           android:layout_alignParentLeft="true"
+	           android:layout_centerVertical="true"
+	           android:text="@string/allow_the_maximum_heart"
+	           android:textSize="16sp" />
+
+	       <TextView
+	           android:id="@+id/tv_hr_unit"
+	           android:layout_width="wrap_content"
+	           android:layout_height="36dp"
+	           android:layout_alignParentRight="true"
+	           android:layout_centerVertical="true"
+	           android:gravity="center"
+	           android:text="@string/bpm"
+	           android:textColor="@color/grey_light"
+	           android:textSize="14sp" />
+
+	       <EditText
+	           android:hint="设置最大心率"
+	           android:id="@+id/ed_hr_value"
+	           android:layout_width="wrap_content"
+	           android:layout_height="wrap_content"
+	           android:layout_centerVertical="true"
+	           android:maxLength="4"
+	           android:maxLines="4"
+	           android:inputType="number"
+	           android:layout_toLeftOf="@id/tv_hr_unit"
+	           android:gravity="center"
+	           android:text="120"
+	           android:textSize="16sp" />
+	    
+	</RelativeLayout>
+	
+	<View
+        android:layout_width="match_parent"
+        android:background="@color/grey_bg"
+        android:layout_height="16dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:text="@string/max_hr_info"
+        android:textSize="14sp" />
+</LinearLayout>

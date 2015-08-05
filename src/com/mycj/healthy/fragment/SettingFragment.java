@@ -3,6 +3,8 @@ package com.mycj.healthy.fragment;
 import java.util.Date;
 
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,6 +38,18 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	private RelativeLayout rlStepGoalSet, rlHeartRateSet, rlSleepTimeSet, rlClockSet, rlAutoHeartRateSet, rlBindedDevice, rlPhoneIncomingSet, rlSyncTime, rlInstoduction, rlShutdown, rlUpdate;
 	private TextView tvStepGoal, tvHeartRateMax, tvClock, tvAutoHrTest, tvBindDevice, tvIncoming;
 	private LiteBlueService mLiteBlueService;
+	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if (action.equals(LiteBlueService.LITE_CHARACTERISTIC_CHANGED)) {
+			} else if (action.equals(LiteBlueService.LITE_GATT_DISCONNECTED)) {
+				setBluetooth();
+			} else if (action.equals(LiteBlueService.LITE_GATT_CONNECTED)) {
+				setBluetooth();
+			}
+		}
+	};
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,7 +65,8 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		rlUpdate = (RelativeLayout) view.findViewById(R.id.rl_update);
 		rlPhoneIncomingSet = (RelativeLayout) view.findViewById(R.id.rl_phone_incoming);
 		rlSyncTime = (RelativeLayout) view.findViewById(R.id.rl_sync_time);
-		rlInstoduction = (RelativeLayout) view.findViewById(R.id.rl_app_introduction);
+		// rlInstoduction = (RelativeLayout)
+		// view.findViewById(R.id.rl_app_introduction);
 		rlShutdown = (RelativeLayout) view.findViewById(R.id.rl_shutdown);
 
 		// 各种初始状态
@@ -70,6 +85,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onResume() {
 		mLiteBlueService = ((BaseApp) getActivity().getApplication()).getLiteBlueService();
+		getActivity().registerReceiver(mReceiver, LiteBlueService.getIntentFilter());
 		setClockValue();
 		setStep();
 		setHeartRate();
@@ -78,7 +94,13 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		setIncoming();
 		super.onResume();
 	}
-
+	
+	
+	@Override
+	public void onPause() {
+		getActivity().unregisterReceiver(mReceiver);
+		super.onPause();
+	}
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -121,9 +143,10 @@ public class SettingFragment extends Fragment implements OnClickListener {
 				;
 			}
 			break;
-		case R.id.rl_app_introduction:
-			startActivity(new Intent(getActivity(), SettingIntroduceAppActivity.class));
-			break;
+		/*
+		 * case R.id.rl_app_introduction: startActivity(new
+		 * Intent(getActivity(), SettingIntroduceAppActivity.class)); break;
+		 */
 		case R.id.rl_shutdown:
 			showdialog();
 			break;
@@ -139,16 +162,20 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		boolean isOn = (boolean) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_CLOCK_ON_OFF, false);
 		tvClock.setText((hour < 10 ? ("0" + hour) : (hour + "")) + ":" + (min < 10 ? ("0" + min) : (min + "")) + "/" + (isOn ? "已开启" : "未开启"));
 	}
+
 	private void setStep() {
 		tvStepGoal.setText("" + (int) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_STEP_GOAL, 0));
 	}
+
 	private void setHeartRate() {
 		tvHeartRateMax.setText("" + (int) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_HEART_RATE_MAX, 0));
 	}
+
 	private void setAutoHeartRate() {
 		tvAutoHrTest.setText((boolean) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_AUTO_HEART_RATE_ON_OFF, false) ? "已开启" : "未开启");
 		tvAutoHrTest.setText((boolean) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_AUTO_HEART_RATE_ON_OFF, false) ? "已开启" : "未开启");
 	}
+
 	private void setBluetooth() {
 		BluetoothDevice device = mLiteBlueService.getCurrentBluetoothDevice();
 		Log.e("SettingFragment", "currentDevice : " + device);
@@ -158,6 +185,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	private void setIncoming() {
 		tvIncoming.setText((boolean) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_INCOMING_ON_OFF, false) ? "已开启" : "未开启");
 	}
+
 	private void showdialog() {
 		new MyAlertDialog(getActivity()).builder().setTitle("确定推出？").setPositiveButton("确定", new OnClickListener() {
 			@Override
@@ -175,7 +203,6 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		}).show();
 	}
 
-
 	private void setListener() {
 		rlStepGoalSet.setOnClickListener(this);
 		rlHeartRateSet.setOnClickListener(this);
@@ -185,7 +212,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		rlBindedDevice.setOnClickListener(this);
 		rlPhoneIncomingSet.setOnClickListener(this);
 		rlSyncTime.setOnClickListener(this);
-		rlInstoduction.setOnClickListener(this);
+		// rlInstoduction.setOnClickListener(this);
 		rlShutdown.setOnClickListener(this);
 		rlUpdate.setOnClickListener(this);
 	}

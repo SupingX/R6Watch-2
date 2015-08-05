@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- MainActivity -->
+    <string name="main_tab_my">我的状态</string>
+    <string name="main_tab_data">数据统计</string>
+    <string name="main_tab_setting">设  置</string>
+    <!-- SettingAutoHeartRateActivity -->
+    <string name="auto_hr_detection">自动心率测试</string>
+    <string name="auto_hr_info">亲，此功能打开后，手表会在规定时间内自动开启心率测试。</string>
+    <!-- SettingBindedDeviceActivity -->
+    <string name="connected_watch">当前绑定设备</string>
+    <string name="device_none">无绑定</string>
+    <string name="other_watch">附近所有设备</string>
+    <string name="binding_equipment">绑定设备</string>
+    <!-- settingClockSetActivity -->
+    <string name="watch_alarm">手表闹钟</string>
+    <string name="alarm_time">闹钟时间</string>
+    <string name="alarm_info">亲，手表闹钟设置成功后，会将设置同步到手表，到了指定的时间将会给你提醒</string>
+    <!-- SettingHeartRateSetActivity -->
+    <string name="allow_the_maximum_heart">允许的最大心率值</string>
+    <string name="bpm">/bpm</string>
+    <string name="max_hr_info">亲,最大心率只能在40~200之间，设置完成后，将会同步最大心率给手表。</string>
+    <string name="max_heart">最大心率值</string>
+    <!-- SettingPhoneIncomingActivity -->
+    <string name="call_msg_reminder">来电/信息提示</string>
+    <string name="incoming_info">此功能打开后，当你有来电时，手表将会有相应的提示</string>
+    <!-- SettingSleepTimeSetActivity -->
+    <string name="siesta_time_set">午休时间设置</string>
+    <string name="siesta_start">午休开始时间</string>
+    <string name="siesta_over">午休结束时间</string>
+    <string name="sleep_time_set">睡眠时间设置</string>
+    <string name="sleep_start">睡眠开始时间</string>
+    <string name="sleep_over">睡眠结束时间</string>
+    <string name="sleep_info">为了方便系统地采集到准确的休息数据，请不要设置我重叠的休息时间。</string>
+    <string name="sleep">睡眠</string>
+    <!-- SettingStepGoalActivity -->
+    <string name="target_step">目标步数</string>
+    <string name="target_step_title">目标步数</string>
+    <string name="exercise_evaluation">运动评估：</string>
+    <string name="gold_step">目标步数：</string>
+    <string name="unbinding_model">随意模式</string>
+     <string name="complete_step">已完成 ： </string>
+     <string name="sleep_tips"> 睡眠：</string>
+     <string name="siesta_tips">午休：</string>
+     <string name="nap_tips">小憩： </string>
+     
+     
+    
+    
+    <string name="step">步</string>
+    <string name="step_info">亲，系统设定目标步数在500~99990之间，设置完成后，将会同目标步数给手表进行计步</string>
+    <!-- InformationFragment -->
+    <string name="info_step">步数</string>
+    <string name="info_distance">距离</string>
+    <string name="info_cal">消耗能量</string>
+    <string name="info_heart">心率</string>
+    <string name="siesta">午休</string>
+    <string name="nap">小憩</string>
+    <string name="target_distance">目标距离 ：</string>
+    <string name="target_cal">目标卡洛里 ：</string>
+    <string name="complete_distance">已完成距离 ：</string>
+    <string name="complete_cal">已消耗卡洛里 ：</string>
+    <string name="hour">小时</string>
+    
+    
+    <string name="low">过低</string>
+    <string name="nomal">适中</string>
+    <string name="high">过高</string>
+    <string name="sport">运动</string>
+    <string name="hr_value">当前心率 ：</string>
+    
+    <string name="sleep_eval">睡眠评价 ：</string>
+    <string name="siesta_eval">睡眠评价 ：</string>
+    <string name="nap_eval">睡眠评价 ：</string>
+    
+    <string name="eval_sleep_leak">不足</string>
+    <string name="eval_sleep_normal">正常</string>
+    <string name="eval_sleep_high">过多</string>
+    
+    
+    
+    
+    
+    
+    <!-- SettingFragment -->
+    <string name="setting">设置</string>
+    <string name="sync_data">同步所有数据</string>
+    <string name="sync_time">同步手表时间</string>
+    <string name="introduce">应用介绍 </string>
+    <string name="exit">关闭</string>
+    <string name="cancel">取消</string>
+    <string name="goal_step">目标步数 ：</string>
+
+</resources>

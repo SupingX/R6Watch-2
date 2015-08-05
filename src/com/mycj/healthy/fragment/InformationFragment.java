@@ -1,6 +1,5 @@
 package com.mycj.healthy.fragment;
 
-
 import java.util.List;
 import java.util.Random;
 
@@ -70,8 +69,8 @@ public class InformationFragment extends Fragment implements OnClickListener {
 	private ImageView imgHr;
 	private TextView tvStepInfo, tvDistanceInfo, tvCalInfo, tvHeartRateInfo, tvSleepInfo, tvMiddleInfo, tvRestInfo;
 
-	private final float STEP_TO_DISTANCE = 10000f / 4000f;
-	private final float STEP_TO_KCAL = 7000f / 1000f;
+	private final float STEP_TO_DISTANCE = 4000f / (10000 * 1000f);
+	private final float STEP_TO_KCAL = 1000f / (7000f * 1000);
 	private final int STEP_DEFAUL = 20000;
 
 	private TextView tvHeartRateViewValue;
@@ -83,10 +82,19 @@ public class InformationFragment extends Fragment implements OnClickListener {
 	private TextView tvRestAdviser;
 	private TextView tvRestValue;
 	private TextView tvHeartRateViewAdviser;
-	private Resources resource;	
-	boolean isShow;
-	private Handler mHandler = new Handler(){
-		
+	private Resources resource;
+
+	/** ------------- **/
+	private int goalStep;
+	private int completeStep;
+	private int currentHr;
+	private float sleepHour;
+	private float middleHour;
+	private float restHour;
+	/** ------------- **/
+
+	private Handler mHandler = new Handler() {
+
 	};
 	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		@Override
@@ -100,11 +108,8 @@ public class InformationFragment extends Fragment implements OnClickListener {
 					@Override
 					public void run() {
 						updateHeartRate(hr);
-						if(isShow){
-							hrv.setData(hr);
-							pathView.setData(hr);
-						}
-						
+//						hrv.setData(hr);
+//						pathView.setData(hr);
 					}
 				});
 			} else if (action.equals(LiteBlueService.LITE_CHARACTERISTIC_CHANGED_SLEEP)) {
@@ -141,14 +146,108 @@ public class InformationFragment extends Fragment implements OnClickListener {
 	}
 
 	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Log.v("InformationFragment", "Fragment生命周期之onCreateView()");
+		// 加载布局文件
+		View view = inflater.inflate(R.layout.fragment_infomation, container, false);
+		resource = getResources();
+		// 初始化views
+		imgStep = (ImageView) view.findViewById(R.id.img_sport_pedo);
+		imgDistance = (ImageView) view.findViewById(R.id.img_sport_distance);
+		imgCal = (ImageView) view.findViewById(R.id.img_sport_cal);
+		imgHeart = (ImageView) view.findViewById(R.id.img_sport_hr);
+		imgSleep = (ImageView) view.findViewById(R.id.img_sleep);
+		imgMiddleSleep = (ImageView) view.findViewById(R.id.img_sleep_mid);
+		imgRest = (ImageView) view.findViewById(R.id.img_sleep_rest);
+		tvStepInfo = (TextView) view.findViewById(R.id.tv_infomation_step_value);
+		tvDistanceInfo = (TextView) view.findViewById(R.id.tv_infomation_distance_value);
+		tvCalInfo = (TextView) view.findViewById(R.id.tv_infomation_cal_value);
+		tvHeartRateInfo = (TextView) view.findViewById(R.id.tv_infomation_hr_value);
+		tvSleepInfo = (TextView) view.findViewById(R.id.tv_infomation_sleep_value);
+		tvMiddleInfo = (TextView) view.findViewById(R.id.tv_infomation_middle_value);
+		tvRestInfo = (TextView) view.findViewById(R.id.tv_infomation_rest_value);
+		frame = (FrameLayout) view.findViewById(R.id.vp_top);
+
+		// boolean isModel = getStepModel();
+
+		// 计步
+		stepView = inflater.inflate(R.layout.view_infomation_step, container, false);
+		stepCircle = (StepCircle) stepView.findViewById(R.id.step_circle);
+		tvStepViewStep = (TextView) stepView.findViewById(R.id.tv_step);
+		tvStepViewModle = (TextView) stepView.findViewById(R.id.tv_step_model);
+		// initStep(isModel);
+
+		// 距离
+		distanceView = inflater.inflate(R.layout.view_infomation_distance, container, false);
+		disView = (DistanceView) distanceView.findViewById(R.id.view_distance);
+		tvDistanceViewGoal = (TextView) distanceView.findViewById(R.id.tv_dis_pedo);
+		tvDistanceViewComplete = (TextView) distanceView.findViewById(R.id.tv_distance);
+		// initDistance(isModel);
+
+		// 卡洛里
+		kcalView = inflater.inflate(R.layout.view_infomation_cal, container, false);
+		tvCalViewGoal = (TextView) kcalView.findViewById(R.id.tv_cal_goal);
+		tvCalViewCompleteInfo = (TextView) kcalView.findViewById(R.id.tv_cal_complete_info);
+		tvCalViewComplete = (TextView) kcalView.findViewById(R.id.tv_cal_complete);
+		setTextFace(tvCalViewComplete);
+		setTextFace(tvCalViewGoal);
+		seekBarCal = (ColorSeekBar) kcalView.findViewById(R.id.progress_cal);
+		seekBarCal.setEnabled(false);
+		// initCal(isModel);
+
+		// 心率
+		hrView = inflater.inflate(R.layout.view_infomation_hr, container, false);
+		imgHr = (ImageView) hrView.findViewById(R.id.img_hr);
+		seekBarHeartRate = (ColorSeekBar) hrView.findViewById(R.id.progress_hr);
+		tvHeartRateViewValue = (TextView) hrView.findViewById(R.id.tv_hr_value);
+		tvHeartRateViewAdviser = (TextView) hrView.findViewById(R.id.tv_hr_info);
+		rlHeart = (RelativeLayout) hrView.findViewById(R.id.rl_hr);
+		seekBarHeartRate.setEnabled(false);
+		initHeartRate();
+		// //心率统计
+		// hrCountView = inflater.inflate(R.layout.activity_heart_rate_count,
+		// container, false);
+		// hrv = (SimpleHeartRateView) hrCountView.findViewById(R.id.hrv);
+		// pathView = (HeartRatePathView)
+		// hrCountView.findViewById(R.id.path_view);
+
+		// 睡眠
+		sleepView = inflater.inflate(R.layout.view_infomation_sleep_1, container, false);
+		tvSleepAdviser = (TextView) sleepView.findViewById(R.id.tv_sleep_adv);
+		tvSleepValue = (TextView) sleepView.findViewById(R.id.tv_sleep_info);
+
+		// 午休
+		middleSleepView = inflater.inflate(R.layout.view_infomation_middle_sleep, container, false);
+		tvMidSleepAdviser = (TextView) middleSleepView.findViewById(R.id.tv_sleep_middle_adv);
+		tvMidSleepValue = (TextView) middleSleepView.findViewById(R.id.tv_sleep_middle_info);
+		// 小憩
+		restView = inflater.inflate(R.layout.view_infomation_rest, container, false);
+		tvRestAdviser = (TextView) restView.findViewById(R.id.tv_sleep_rest_adv);
+		tvRestValue = (TextView) restView.findViewById(R.id.tv_sleep_rest_info);
+
+		// initSleep();
+		// 初始化
+		frame.addView(stepView);
+
+		setListener();
+		return view;
+	}
+
+	@Override
 	public void onResume() {
+		boolean isModel = getStepModel();
+		initStep(isModel);
+		initDistance(isModel);
+		initCal(isModel);
+		initSleep();
+
 		Log.v("InformationFragment", "Fragment生命周期之onResume()");
 		super.onResume();
 		startHeartRateAnimation();
 		mLiteBlueService = ((BaseApp) getActivity().getApplication()).getLiteBlueService();
 		getActivity().registerReceiver(mReceiver, LiteBlueService.getIntentFilter());
-//		((BaseApp)(getActivity().getApplication())).setOnStepChangListener(this);
-//		((BaseApp)(getActivity().getApplication())).setOnHeartRateChangListener(this);
+		// ((BaseApp)(getActivity().getApplication())).setOnStepChangListener(this);
+		// ((BaseApp)(getActivity().getApplication())).setOnHeartRateChangListener(this);
 		Log.e("InformationFragment", "mLiteBlueService" + mLiteBlueService);
 	}
 
@@ -158,10 +257,8 @@ public class InformationFragment extends Fragment implements OnClickListener {
 		super.onPause();
 		getActivity().unregisterReceiver(mReceiver);
 		stopHeartRateAnimation();
-		
+
 	}
-	
-	
 
 	@Override
 	public void onClick(View v) {
@@ -211,10 +308,10 @@ public class InformationFragment extends Fragment implements OnClickListener {
 			imgRest.setImageResource(R.drawable.sleep_tracking_rest_icon_on);
 			break;
 		case R.id.rl_hr:
-//			clearSelected();
-//			frame.removeAllViews();
-//			frame.addView(hrCountView);
-//			isShow = true;
+			// clearSelected();
+			// frame.removeAllViews();
+			// frame.addView(hrCountView);
+			// isShow = true;
 			startActivity(new Intent(getActivity(), HeartRateCountActivity.class));
 			break;
 
@@ -223,95 +320,9 @@ public class InformationFragment extends Fragment implements OnClickListener {
 		}
 	}
 
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.v("InformationFragment", "Fragment生命周期之onCreateView()");
-		// 加载布局文件
-		View view = inflater.inflate(R.layout.fragment_infomation, container, false);
-		resource = getResources();
-		// 初始化views
-		imgStep = (ImageView) view.findViewById(R.id.img_sport_pedo);
-		imgDistance = (ImageView) view.findViewById(R.id.img_sport_distance);
-		imgCal = (ImageView) view.findViewById(R.id.img_sport_cal);
-		imgHeart = (ImageView) view.findViewById(R.id.img_sport_hr);
-		imgSleep = (ImageView) view.findViewById(R.id.img_sleep);
-		imgMiddleSleep = (ImageView) view.findViewById(R.id.img_sleep_mid);
-		imgRest = (ImageView) view.findViewById(R.id.img_sleep_rest);
-		tvStepInfo = (TextView) view.findViewById(R.id.tv_infomation_step_value);
-		tvDistanceInfo = (TextView) view.findViewById(R.id.tv_infomation_distance_value);
-		tvCalInfo = (TextView) view.findViewById(R.id.tv_infomation_cal_value);
-		tvHeartRateInfo = (TextView) view.findViewById(R.id.tv_infomation_hr_value);
-		tvSleepInfo = (TextView) view.findViewById(R.id.tv_infomation_sleep_value);
-		tvMiddleInfo = (TextView) view.findViewById(R.id.tv_infomation_middle_value);
-		tvRestInfo = (TextView) view.findViewById(R.id.tv_infomation_rest_value);
-		frame = (FrameLayout) view.findViewById(R.id.vp_top);
-
-		boolean isModel = getStepModel();
-
-		// 计步
-		stepView = inflater.inflate(R.layout.view_infomation_step, container, false);
-		stepCircle = (StepCircle) stepView.findViewById(R.id.step_circle);
-		tvStepViewStep = (TextView) stepView.findViewById(R.id.tv_step);
-		tvStepViewModle = (TextView) stepView.findViewById(R.id.tv_step_model);
-		initStep(isModel);
-
-		// 距离
-		distanceView = inflater.inflate(R.layout.view_infomation_distance, container, false);
-		disView = (DistanceView) distanceView.findViewById(R.id.view_distance);
-		tvDistanceViewGoal = (TextView) distanceView.findViewById(R.id.tv_dis_pedo);
-		tvDistanceViewComplete = (TextView) distanceView.findViewById(R.id.tv_distance);
-		initDistance(isModel);
-
-		// 卡洛里
-		kcalView = inflater.inflate(R.layout.view_infomation_cal, container, false);
-		tvCalViewGoal = (TextView) kcalView.findViewById(R.id.tv_cal_goal);
-		tvCalViewCompleteInfo = (TextView) kcalView.findViewById(R.id.tv_cal_complete_info);
-		tvCalViewComplete = (TextView) kcalView.findViewById(R.id.tv_cal_complete);
-		setTextFace(tvCalViewComplete);
-		setTextFace(tvCalViewGoal);
-		seekBarCal = (ColorSeekBar) kcalView.findViewById(R.id.progress_cal);
-		seekBarCal.setEnabled(false);
-		initCal(isModel);
-
-		// 心率
-		hrView = inflater.inflate(R.layout.view_infomation_hr, container, false);
-		imgHr = (ImageView) hrView.findViewById(R.id.img_hr);
-		seekBarHeartRate = (ColorSeekBar) hrView.findViewById(R.id.progress_hr);
-		tvHeartRateViewValue = (TextView) hrView.findViewById(R.id.tv_hr_value);
-		tvHeartRateViewAdviser = (TextView) hrView.findViewById(R.id.tv_hr_info);
-		rlHeart = (RelativeLayout) hrView.findViewById(R.id.rl_hr);
-		seekBarHeartRate.setEnabled(false);
-		initHeartRate();
-//		//心率统计
-//		hrCountView = inflater.inflate(R.layout.activity_heart_rate_count, container, false);
-//		hrv = (SimpleHeartRateView) hrCountView.findViewById(R.id.hrv);
-//		pathView = (HeartRatePathView) hrCountView.findViewById(R.id.path_view);
-
-		// 睡眠
-		sleepView = inflater.inflate(R.layout.view_infomation_sleep_1, container, false);
-		tvSleepAdviser = (TextView) sleepView.findViewById(R.id.tv_sleep_adv);
-		tvSleepValue = (TextView) sleepView.findViewById(R.id.tv_sleep_info);
-
-		// 午休
-		middleSleepView = inflater.inflate(R.layout.view_infomation_middle_sleep, container, false);
-		tvMidSleepAdviser = (TextView) middleSleepView.findViewById(R.id.tv_sleep_middle_adv);
-		tvMidSleepValue = (TextView) middleSleepView.findViewById(R.id.tv_sleep_middle_info);
-		// 小憩
-		restView = inflater.inflate(R.layout.view_infomation_rest, container, false);
-		tvRestAdviser = (TextView) restView.findViewById(R.id.tv_sleep_rest_adv);
-		tvRestValue = (TextView) restView.findViewById(R.id.tv_sleep_rest_info);
-
-		initSleep();
-		// 初始化
-		frame.addView(stepView);
-
-		setListener();
-		return view;
-	}
 	/**
-	 * 初始化 步数
-	 * 2种模式：计步模式 & 随意模式
+	 * 初始化 步数 2种模式：计步模式 & 随意模式
+	 * 
 	 * @param isModel
 	 */
 	private void initStep(boolean isModel) {
@@ -319,20 +330,24 @@ public class InformationFragment extends Fragment implements OnClickListener {
 		String unbendingStr = resource.getString(R.string.unbinding_model);
 		String completeStr = resource.getString(R.string.complete_step);
 		String stepUnit = resource.getString(R.string.step);
-		
+
 		if (isModel) {
-			int goalStep = getGoalStep();
+			goalStep = getGoalStep();
+			Log.e("InformationFragment", "___goalStep : " + goalStep);
 			stepCircle.setMaxProgress(goalStep);
+			stepCircle.setProgress(completeStep);
 			tvStepViewModle.setText(goldStepStr + goalStep);
 		} else {
 			tvStepViewModle.setText(unbendingStr);
+			stepCircle.setProgress(0);
 		}
-		tvStepViewStep.setText(completeStr + "0" +stepUnit);
-		tvStepInfo.setText("0" + stepUnit);
+		tvStepViewStep.setText(completeStr + String.valueOf(completeStep) + stepUnit);
+		tvStepInfo.setText(String.valueOf(completeStep) + stepUnit);
 	}
-	
+
 	/**
 	 * 初始化 距离
+	 * 
 	 * @param isModel
 	 */
 	private void initDistance(boolean isModel) {
@@ -346,19 +361,21 @@ public class InformationFragment extends Fragment implements OnClickListener {
 			goal = stepToDistance(20000);
 			disView.setMaxDistance(goal);
 		}
-		tvDistanceViewGoal.setText(targetStr + goal + "km");
-		tvDistanceViewComplete.setText(completeStr+"0.0km");
-		tvDistanceInfo.setText("0.0km");
+		tvDistanceViewGoal.setText(targetStr + DataUtil.format(goal) + "km");
+		String completeDistance = DataUtil.format(stepToDistance(completeStep));
+		tvDistanceViewComplete.setText(completeStr + completeDistance + "km");
+		tvDistanceInfo.setText(completeDistance + "km");
 	}
-	
+
 	/**
 	 * 初始化 卡洛里
+	 * 
 	 * @param isModel
 	 */
 	private void initCal(boolean isModel) {
 		String targetStr = resource.getString(R.string.target_cal);
 		String completeStr = resource.getString(R.string.complete_cal);
-		
+
 		float goal;
 		if (isModel) {
 			goal = stepToCal(getGoalStep());
@@ -367,22 +384,25 @@ public class InformationFragment extends Fragment implements OnClickListener {
 			goal = stepToCal(20000);
 			seekBarCal.setMax((int) goal);
 		}
-		tvCalViewComplete.setText("0.0");
 		tvCalViewGoal.setText(targetStr + DataUtil.format(goal) + "kcal");
-		tvCalViewCompleteInfo.setText(completeStr+"0.0kcal");
-		tvCalInfo.setText("0.0 kcal");
-		seekBarCal.setProgress(0);
+		String completeCal = DataUtil.format(stepToCal(completeStep));
+		tvCalViewComplete.setText(completeCal);
+		tvCalViewCompleteInfo.setText(completeStr + completeCal + "kcal");
+		tvCalInfo.setText(completeCal + "kcal");
+		seekBarCal.setProgress((int) stepToCal(completeStep));
+		checkCalInfo(stepToCal(completeStep), goal);
 	}
 
 	/**
 	 * 初始化 心率
 	 */
 	private void initHeartRate() {
-		tvHeartRateViewValue.setText("" + 0);
-		seekBarHeartRate.setMax(200);
+		tvHeartRateViewValue.setText("" + currentHr);
+		seekBarHeartRate.setMax(180);
 		seekBarHeartRate.setProgress(0);
 		tvHeartRateViewAdviser.setText("");
-		tvHeartRateInfo.setText(0 + " bpm");
+		tvHeartRateInfo.setText(currentHr + " bpm");
+		checkHeartRateInfo(currentHr);
 	}
 
 	/**
@@ -393,33 +413,34 @@ public class InformationFragment extends Fragment implements OnClickListener {
 		String sleepStr = resource.getString(R.string.sleep_tips);
 		String middleStr = resource.getString(R.string.siesta_tips);
 		String restStr = resource.getString(R.string.nap_tips);
-		
-		
-		tvSleepInfo.setText("" + DataUtil.format(0) + hourStr);
-		checkSleepAdviser(0);
-		tvSleepValue.setText(sleepStr + DataUtil.format(0) + hourStr);
 
-		tvMiddleInfo.setText("" + DataUtil.format(0) + hourStr);
-		checkMidSleepAdviser(0);
-		tvMidSleepValue.setText(middleStr + DataUtil.format(0) + hourStr);
+		tvSleepInfo.setText("" + DataUtil.format(sleepHour) + hourStr);
+		checkSleepAdviser(sleepHour);
+		tvSleepValue.setText(sleepStr + DataUtil.format(sleepHour) + hourStr);
 
-		tvRestInfo.setText("" + DataUtil.format(0) + hourStr);
-		checkRestAdviser(0);
-		tvRestValue.setText(restStr + DataUtil.format(0) + hourStr);
+		tvMiddleInfo.setText("" + DataUtil.format(middleHour) + hourStr);
+		checkMidSleepAdviser(middleHour);
+		tvMidSleepValue.setText(middleStr + DataUtil.format(middleHour) + hourStr);
+
+		tvRestInfo.setText("" + DataUtil.format(restHour) + hourStr);
+		checkRestAdviser(restHour);
+		tvRestValue.setText(restStr + DataUtil.format(restHour) + hourStr);
 	}
 
 	/**
-	 * 手表 -->手机  数据更新
-	 * 	更新步数 
+	 * 手表 -->手机 数据更新 更新步数
+	 * 
 	 * @param step
 	 */
 	private void updateStep(int step) {
-		String completeStr = resource.getString(R.string.complete_step);
-		String stepUnitStr = resource.getString(R.string.step);
-		
-		stepCircle.setProgress(step);
-		tvStepViewStep.setText(completeStr + step +stepUnitStr);
-		tvStepInfo.setText("" + step + stepUnitStr);
+		completeStep = step;
+		// String completeStr = resource.getString(R.string.complete_step);
+		// String stepUnitStr = resource.getString(R.string.step);
+		// stepCircle.setProgress(step);
+		// tvStepViewStep.setText(completeStr + step +stepUnitStr);
+		// tvStepInfo.setText("" + step + stepUnitStr);
+		boolean isModel = getStepModel();
+		initStep(isModel);
 		updateDistance(step);
 		updateCal(step);
 	}
@@ -430,48 +451,57 @@ public class InformationFragment extends Fragment implements OnClickListener {
 	 * @param step
 	 */
 	private void updateDistance(int step) {
-		String completeStr = resource.getString(R.string.complete_distance);
-		tvDistanceViewComplete.setText(completeStr + DataUtil.format(stepToDistance(step)) + "km");
-		disView.setCurrentDistance(stepToDistance(step));
-		tvDistanceInfo.setText(DataUtil.format(stepToDistance(step)) + "km");
+		// String completeStr = resource.getString(R.string.complete_distance);
+		// tvDistanceViewComplete.setText(completeStr +
+		// DataUtil.format(stepToDistance(step)) + "km");
+		// disView.setCurrentDistance(stepToDistance(step));
+		// tvDistanceInfo.setText(DataUtil.format(stepToDistance(step)) + "km");
+		boolean isModel = getStepModel();
+		initDistance(isModel);
 	}
 
 	private void updateCal(int step) {
-		tvCalInfo.setText(DataUtil.format(stepToCal(step)) + " kcal");
-		// tvCalViewCompleteInfo.setText("完成卡洛里："+stepToCal(step));
-		seekBarCal.setProgress((int) stepToCal(step));
-		tvCalViewComplete.setText(DataUtil.format(stepToCal(step)) + "");
-		checkCalInfo(stepToCal(step), stepToCal(getGoalStep()));
+		// tvCalInfo.setText(DataUtil.format(stepToCal(step)) + " kcal");
+		// // tvCalViewCompleteInfo.setText("完成卡洛里："+stepToCal(step));
+		// seekBarCal.setProgress((int) stepToCal(step));
+		// tvCalViewComplete.setText(DataUtil.format(stepToCal(step)) + "");
+//		 checkCalInfo(stepToCal(step), stepToCal(getGoalStep()));
+		boolean isModel = getStepModel();
+		initCal(isModel);
 	}
 
 	private void updateHeartRate(int hr) {
-		tvHeartRateViewValue.setText(String.valueOf(hr));
-		seekBarHeartRate.setProgress(hr);
-		checkHeartRateInfo(hr);
-		tvHeartRateInfo.setText(hr + " bpm");
+		currentHr = hr;
+		// tvHeartRateViewValue.setText(String.valueOf(hr));
+		// seekBarHeartRate.setProgress(hr);
+//		 checkHeartRateInfo(hr);
+		// tvHeartRateInfo.setText(hr + " bpm");
+		initHeartRate();
 	}
 
 	private void updateSleep(int sleep, int mid, int rest) {
+		sleepHour = sleep;
+		middleHour = mid;
+		restHour = rest;
 		//
+		initSleep();
 	}
 
 	private float stepToDistance(int step) {
-		return step / STEP_TO_DISTANCE;
+		return step * STEP_TO_DISTANCE;
 	}
 
 	private float stepToCal(int step) {
-		return step / STEP_TO_KCAL;
+		return step * STEP_TO_KCAL;
 	}
 
 	private boolean getStepModel() {
 		return (boolean) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_STEP_ON_OFF, false);
 	}
 
-
 	private int getGoalStep() {
 		return (int) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_STEP_GOAL, STEP_DEFAUL);
 	}
-
 
 	/**
 	 * 从assert中获取有资源，获得app的assert，采用getAserts()，通过给出在assert/下面的相对路径。在实际使用中，
@@ -488,27 +518,28 @@ public class InformationFragment extends Fragment implements OnClickListener {
 	private void startHeartRateAnimation() {
 		animator1 = ObjectAnimator.ofFloat(imgHr, "scaleX", 1f, 3f, 1f);
 		animator2 = ObjectAnimator.ofFloat(imgHr, "scaleY", 1f, 3f, 1f);
-		animator1.setDuration(200);
+		animator1.setDuration(1000);
 		animator1.setRepeatCount(-1); // 动画循环播放的次数
-		animator2.setDuration(200);
+		animator2.setDuration(1000);
 		animator2.setRepeatCount(-1); // 动画循环播放的次数
 		animator1.start();
 		animator2.start();
 	}
-	
-	private void stopHeartRateAnimation(){
-		if(animator1!=null){
+
+	private void stopHeartRateAnimation() {
+		if (animator1 != null) {
 			animator1.cancel();
 			animator2.cancel();
 		}
 	}
+
 	private void checkCalInfo(float progress, float max) {
 		String completeStr = resource.getString(R.string.complete_cal);
 		String lowStr = resource.getString(R.string.low);
 		String normalStr = resource.getString(R.string.nomal);
 		String sportStr = resource.getString(R.string.sport);
 		String highStr = resource.getString(R.string.high);
-		
+
 		StringBuffer sb = new StringBuffer();
 		sb.append(completeStr);
 		sb.append(DataUtil.format(progress));
@@ -525,7 +556,6 @@ public class InformationFragment extends Fragment implements OnClickListener {
 		}
 		tvCalViewCompleteInfo.setText(sb.toString());
 	}
-
 
 	private void checkHeartRateInfo(int value) {
 		String currentHr = resource.getString(R.string.hr_value);
@@ -548,14 +578,14 @@ public class InformationFragment extends Fragment implements OnClickListener {
 		tvHeartRateViewAdviser.setText(sb.toString());
 	}
 
-	private void checkSleepAdviser(int value) {
+	private void checkSleepAdviser(float value) {
 		String sleepStr = resource.getString(R.string.sleep_eval);
 		String lowStr = resource.getString(R.string.eval_sleep_leak);
 		String normalStr = resource.getString(R.string.eval_sleep_normal);
 		String highStr = resource.getString(R.string.eval_sleep_high);
 		StringBuffer sb = new StringBuffer();
 		sb.append(sleepStr);
-		if (value > 0 && value < 6) {
+		if (value >=0 && value < 6) {
 			sb.append(lowStr);
 		} else if (value >= 6 && value < 9) {
 			sb.append(normalStr);
@@ -565,14 +595,14 @@ public class InformationFragment extends Fragment implements OnClickListener {
 		tvSleepAdviser.setText(sb.toString());
 	}
 
-	private void checkMidSleepAdviser(int value) {
+	private void checkMidSleepAdviser(float value) {
 		String siestaStr = resource.getString(R.string.siesta_eval);
 		String lowStr = resource.getString(R.string.eval_sleep_leak);
 		String normalStr = resource.getString(R.string.eval_sleep_normal);
 		String highStr = resource.getString(R.string.eval_sleep_high);
 		StringBuffer sb = new StringBuffer();
 		sb.append(siestaStr);
-		if (value > 0 && value < 0.5) {
+		if (value >=0 && value < 0.5) {
 			sb.append(lowStr);
 		} else if (value >= 0.5 && value < 2) {
 			sb.append(normalStr);
@@ -582,14 +612,14 @@ public class InformationFragment extends Fragment implements OnClickListener {
 		tvMidSleepAdviser.setText(sb.toString());
 	}
 
-	private void checkRestAdviser(int value) {
+	private void checkRestAdviser(float value) {
 		String napStr = resource.getString(R.string.nap_eval);
 		String lowStr = resource.getString(R.string.eval_sleep_leak);
 		String normalStr = resource.getString(R.string.eval_sleep_normal);
 		String highStr = resource.getString(R.string.eval_sleep_high);
 		StringBuffer sb = new StringBuffer();
 		sb.append(napStr);
-		if (value > 0 && value < 1) {
+		if (value >=0 && value < 1) {
 			sb.append(lowStr);
 		} else if (value >= 1 && value < 6) {
 			sb.append(normalStr);
@@ -619,6 +649,5 @@ public class InformationFragment extends Fragment implements OnClickListener {
 		imgMiddleSleep.setOnClickListener(this);
 		imgRest.setOnClickListener(this);
 	}
-
 
 }

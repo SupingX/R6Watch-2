@@ -1,0 +1,118 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <include
+        android:id="@+id/top_title"
+        layout="@layout/top_title" >
+    </include>
+
+    <RelativeLayout
+         android:background="@color/grey_bg"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+          >
+
+        <TextView
+         
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:padding="12dp"
+            android:text="@string/connected_watch"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_connect_info"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:padding="12dp"
+            android:textColor="@color/orange"
+            android:textSize="14sp" />
+
+      
+
+    </RelativeLayout>
+	
+    <LinearLayout 
+        android:layout_height="48dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:weightSum="2"
+        >
+    <TextView
+        android:layout_weight="1"
+        android:id="@+id/tv_current_device_name"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_light"
+        android:text="@string/device_none"
+        android:textSize="14sp" 
+        android:textColor="@color/grey_light"
+        />
+    
+    <TextView
+                android:textColor="@color/grey_light"
+                android:layout_weight="1"
+        android:id="@+id/tv_current_device_adress"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_light"
+        android:text="@string/device_none"
+        android:textSize="14sp" />
+      <ImageView
+          android:src="@drawable/ic_action_about"
+            android:id="@+id/img_disconnect_device"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:clickable="true"
+            />
+    </LinearLayout>
+  
+
+     <RelativeLayout
+                         android:background="@color/grey_bg"
+            android:padding="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/other_watch"
+            android:textSize="16sp" />
+
+        <ProgressBar
+            android:id="@+id/progress_blue"
+            style="?android:attr/progressBarStyleSmallInverse"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical" />
+
+</RelativeLayout>
+    <ListView
+        android:id="@+id/lv_devices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+     >
+    </ListView>
+    
+     
+
+</LinearLayout>

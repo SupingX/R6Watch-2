@@ -1,7 +1,8 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="${packageName}.${activityClass}" >
 
   <LinearLayout
@@ -22,6 +23,40 @@
    <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@id/top"
             android:background="@color/white" />
-</RelativeLayout>
+   <LinearLayout 
+       android:layout_height="36dp"
+       android:layout_width="match_parent"
+       android:weightSum="2"
+       android:orientation="horizontal"
+       >
+          <TextView
+              android:id="@+id/tv_weekday"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="周统计"
+            android:gravity="center"
+                 android:background="@drawable/selector_bg_count"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:textSize="16sp" />
+          <TextView
+                   android:id="@+id/tv_month"
+                      android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+                 android:background="@drawable/selector_bg_count"
+            android:text="月统计"
+                     android:clickable="true"
+            android:layout_weight="1"
+            android:textSize="16sp" />
+       
+   </LinearLayout>
+   <FrameLayout 
+       android:id="@+id/frame_count"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       ></FrameLayout>
+  
+   
+</LinearLayout>

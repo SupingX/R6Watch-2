@@ -1,0 +1,138 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+        android:background="@color/white"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <include
+        android:id="@+id/top_title"
+        layout="@layout/top_title" >
+    </include>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/call_msg_reminder"
+            android:textSize="16sp" />
+
+         <CheckBox
+            android:id="@+id/cb_incoming"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:button="@drawable/selector_bg_checkbox"
+            android:checked="false"
+            android:clickable="true" />
+    </RelativeLayout>
+
+   <View
+        android:layout_width="match_parent"
+        android:background="@color/grey_bg"
+        android:layout_height="16dp" />
+
+  <!--   <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp" >
+
+        <TextView
+            android:paddingBottom="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="提示方式"
+            android:textSize="16sp" />
+         <View
+        android:layout_width="match_parent"
+        android:background="@color/grey_light"
+        android:layout_height="1dp" />
+        
+        <RelativeLayout 
+            android:id="@+id/rl_incoming_vibration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+                    android:background="@drawable/selector_bg_setting_item"
+            android:padding="12dp"
+            >
+
+             <TextView
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentLeft="true"
+                 android:layout_centerVertical="true"
+                 android:text="震动"
+                 android:textSize="14sp" />
+
+             <ImageView
+                 android:id="@+id/img_phone_iscoming"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentRight="true"
+                 android:layout_centerVertical="true"
+                 android:src="@drawable/setting_choose_on" />
+                   <CheckBox
+                 android:checked="true"
+                 android:id="@+id/cb_vibration"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentRight="true"
+                 android:layout_centerVertical="true"
+                 android:button="@drawable/selector_bg_checkbox_incoming"
+                />
+            
+        </RelativeLayout>
+            <View
+        android:layout_width="match_parent"
+        android:background="@color/grey_light"
+        android:layout_height="1dp" />
+        <RelativeLayout 
+                 android:id="@+id/rl_incoming_sound"
+                 android:background="@drawable/selector_bg_setting_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            >
+
+             <TextView
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentLeft="true"
+                 android:layout_centerVertical="true"
+                 android:text="蜂鸣"
+                 android:textSize="14sp" />
+
+             <CheckBox
+                 android:checked="false"
+                 android:id="@+id/cb_sound"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentRight="true"
+                 android:layout_centerVertical="true"
+                 android:button="@drawable/selector_bg_checkbox_incoming"
+                />
+            
+        </RelativeLayout>
+           <View
+        android:layout_width="match_parent"
+        android:background="@color/grey_light"
+        android:layout_height="1dp" />
+    </LinearLayout> -->
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:text="@string/incoming_info"
+        android:textSize="14sp" />
+
+</LinearLayout>
