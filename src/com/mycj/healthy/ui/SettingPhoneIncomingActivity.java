@@ -7,6 +7,7 @@ import com.mycj.healthy.R;
 import com.mycj.healthy.R.layout;
 import com.mycj.healthy.service.LiteBlueService;
 import com.mycj.healthy.util.Constant;
+import com.mycj.healthy.util.MessageUtil;
 import com.mycj.healthy.util.ProtoclData;
 import com.mycj.healthy.util.SharedPreferenceUtil;
 
@@ -127,8 +128,7 @@ public class SettingPhoneIncomingActivity extends BaseSettingActivity implements
 		SharedPreferenceUtil.put(SettingPhoneIncomingActivity.this, Constant.SHARE_INCOMING_VIBRATION_ON_OFF, isVibrationChecked);
 		SharedPreferenceUtil.put(SettingPhoneIncomingActivity.this, Constant.SHARE_INCOMING_SOUND_ON_OFF, isSoundChecked);
 		// 确认时，更新未读信息
-		((BaseApp) getApplication()).doWriteToWatch();
-
+doWriteToWatch();
 		// if (isConnected(liteBlueService)) {
 
 		// callCount = readMissCall();
@@ -144,7 +144,19 @@ public class SettingPhoneIncomingActivity extends BaseSettingActivity implements
 
 		finish();
 	}
-
+	
+	/**
+	 * 
+	 */
+	private void doWriteToWatch() {
+		boolean isOpen = (boolean) SharedPreferenceUtil.get(this, Constant.SHARE_INCOMING_ON_OFF, false);
+//		if (isOpen && mLiteBlueService.getCurrentState() != null && mLiteBlueService.getCurrentState() == ConnectState.Connected) {
+		if (isOpen&&liteBlueService.isConnetted()) {
+			liteBlueService.writeCharacticsUseConnectListener(ProtoclData.toByteForPhoneMessageIncomingProtocl(MessageUtil.readMissCall(this), MessageUtil.getNewSmsCount(this) + MessageUtil.getNewMmsCount(this)));
+		}else{
+			toastNotConnectted();
+		}
+	}
 	@Override
 	public void imgBack() {
 		finish();
@@ -242,8 +254,4 @@ public class SettingPhoneIncomingActivity extends BaseSettingActivity implements
 		});
 	}
 
-	private void doWriteToWatch() {
-		// liteBlueService.writeCharacticsUseConnectListener(ProtoclData.toByteForPhoneMessageIncomingProtocl(readMissCall(),
-		// getNewSmsCount()+getNewMmsCount()));
-	}
 }

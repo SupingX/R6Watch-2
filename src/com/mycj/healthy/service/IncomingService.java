@@ -33,7 +33,7 @@ public class IncomingService extends Service {
 	public final static String EXTRA_MSG_COUNT = "extra_msg_count";
 	public final static String EXTRA_PHONE_COUNT = "extra_phone_count";
 
-	private final static int DIFF = 10 * 1000; // 60秒运行一次
+	private final static int DIFF = 4 * 1000; // 60秒运行一次
 
 	private int lastPhoneCount;
 	private int lastMsgCount;
@@ -170,4 +170,7 @@ public class IncomingService extends Service {
 		}
 		return result;
 	}
+	
+	
+	
 }

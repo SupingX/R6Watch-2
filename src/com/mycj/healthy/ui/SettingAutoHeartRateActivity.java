@@ -34,7 +34,7 @@ public class SettingAutoHeartRateActivity extends BaseSettingActivity implements
 	@Override
 	public void imgConfirm() {
 		SharedPreferenceUtil.put(SettingAutoHeartRateActivity.this, Constant.SHARE_AUTO_HEART_RATE_ON_OFF, isChecked);
-		if (isConnected(liteBlueService)) {
+		if (liteBlueService.isConnetted()) {
 			liteBlueService.writeCharacticsUseConnectListener(ProtoclData.toByteForAutoHeartRateProtocl(isChecked ? 1 : 0));
 		} else {
 			toastNotConnectted();

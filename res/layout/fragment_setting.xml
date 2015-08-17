@@ -731,7 +731,7 @@
                      android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                /> -->
-            <!-- <RelativeLayout
+           <RelativeLayout
                 android:id="@+id/rl_app_introduction"
                 style="@style/setting_item"
                 android:layout_width="match_parent"
@@ -774,7 +774,7 @@
                 style="@style/setting_item_line"
                   android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-               /> -->
+               /> 
             <RelativeLayout
                 android:id="@+id/rl_shutdown"
                 style="@style/setting_item"

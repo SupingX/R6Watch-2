@@ -36,7 +36,15 @@ public class ActionSheetDialog {
 		WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		display = windowManager.getDefaultDisplay();
 	}
-
+	
+	public interface OnCancelClickListener{
+		public void onClick();
+	}
+	public void setOnCancelClickListener(OnCancelClickListener l){
+		this.mOnCancelClickListener=l;
+	}
+	private OnCancelClickListener mOnCancelClickListener;
+	
 	public ActionSheetDialog builder() {
 		View view = LayoutInflater.from(context).inflate(R.layout.view_actionsheet, null);
 
@@ -50,6 +58,9 @@ public class ActionSheetDialog {
 			@Override
 			public void onClick(View v) {
 				dialog.dismiss();
+				if (mOnCancelClickListener!=null) {
+					mOnCancelClickListener.onClick();
+				}
 			}
 		});
 

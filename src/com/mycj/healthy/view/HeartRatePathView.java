@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mycj.healthy.R;
+import com.mycj.healthy.entity.HeartRateData;
+import com.mycj.healthy.entity.HistoryData;
+import com.mycj.healthy.util.TimeUtil;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -50,7 +53,7 @@ public class HeartRatePathView extends View {
 	 * 数据
 	 */
 	private List<Point> points = new ArrayList<>();
-	private List<Integer> heartRates = new ArrayList<Integer>();
+	private List<HeartRateData> heartRates = new ArrayList<HeartRateData>();
 
 	/**
 	 * 颜色XY轴
@@ -80,6 +83,7 @@ public class HeartRatePathView extends View {
 	private Paint mPaintText;
 	private Paint mPaintLine;
 	private Paint mPaintPoint;
+	private Paint mPaintPointData;
 
 	public HeartRatePathView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -89,14 +93,21 @@ public class HeartRatePathView extends View {
 	private void init(Context context) {
 		mPaintPath = new Paint();
 		mPaintPath.setStyle(Paint.Style.STROKE);
-		mPaintPath.setColor(getResources().getColor(R.color.green));
+		mPaintPath.setColor(getResources().getColor(R.color.count_bg_selected));
 		mPaintPath.setAntiAlias(true);
 		mPaintPath.setStrokeWidth(2);
+		mPaintPath.setStrokeCap(Paint.Cap.ROUND); //设置圆角
 
 		mPaintText = new Paint();
 		mPaintText.setColor(Color.BLACK);
 		mPaintText.setAntiAlias(true);
 		mPaintText.setStrokeWidth(5);
+		
+		mPaintPointData = new Paint();
+		mPaintPointData.setColor(getResources().getColor(R.color.count_bg_selected));
+		mPaintPointData.setAntiAlias(true);
+		mPaintPointData.setStrokeWidth(10);
+		mPaintPointData.setStrokeCap(Paint.Cap.ROUND); //设置圆角
 
 		mPaintLine = new Paint();
 		mPaintLine.setColor(Color.GRAY);
@@ -197,7 +208,17 @@ public class HeartRatePathView extends View {
 		path = new Path();
 		path.moveTo(axisX, axisY);// 起点
 		for (int j = 0; j < points.size(); j++) {
-			path.lineTo((points.get(j).x + 1) * perX + widthSpace, points.get(j).y);
+			float pathX = (points.get(j).x + 1) * perX+widthSpace;
+			float pathY = points.get(j).y;
+			//画点
+			canvas.drawPoint(pathX, pathY, mPaintPointData);
+//			canvas.drawCircle(pathX, pathY, 5, mPaintPointData);
+			//画字
+//			String str = TimeUtil.dateToHourStr(heartRates.get(j).getDate());
+			String str = heartRates.get(j).getHeartRate()+"";
+			canvas.drawText(str, pathX, pathY, mPaintText);
+			//画路径
+			path.lineTo(pathX ,pathY );
 		}
 		canvas.drawPath(path, mPaintPath);
 
@@ -242,12 +263,12 @@ public class HeartRatePathView extends View {
 	 * 
 	 * @param data
 	 */
-	public void setData(int data) {
+	public void setData(HeartRateData data) {
 
 		Log.e("HeartRateView", "points : " + points.size());
 		heartRates.add(data);
 		Point p = new Point();
-		p.y = getPointY(data);
+		p.y = getPointY(data.getHeartRate());
 		p.x = points.size();
 		points.add(p);
 		if (points.size() > 9) {// 可换成当大于屏幕宽度-diff时 增加
@@ -270,6 +291,14 @@ public class HeartRatePathView extends View {
 	private int getPointY(float data) {
 		return (int) (axisY - (heightY * data / 200));
 	}
-
+	
+	public void reset (){
+		position = 0;
+		points.clear();
+		widthX = perX * 11 + widthSpace;
+		scrollTo(0, 0);
+		heartRates.clear();
+		invalidate();
+	}
 
 }

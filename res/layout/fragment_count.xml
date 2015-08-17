@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:gravity="center"
-            android:text="数据统计"
+            android:text="@string/count"
             android:textColor="@color/white"
             android:textSize="20sp" />
     </LinearLayout>
@@ -34,7 +34,7 @@
               android:id="@+id/tv_weekday"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="周统计"
+            android:text="@string/day_count"
             android:gravity="center"
                  android:background="@drawable/selector_bg_count"
             android:layout_weight="1"
@@ -46,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
                  android:background="@drawable/selector_bg_count"
-            android:text="月统计"
+            android:text="@string/month_count"
                      android:clickable="true"
             android:layout_weight="1"
             android:textSize="16sp" />

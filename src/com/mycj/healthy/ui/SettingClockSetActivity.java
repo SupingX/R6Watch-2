@@ -64,7 +64,7 @@ public class SettingClockSetActivity extends BaseSettingActivity implements OnCl
 		SharedPreferenceUtil.put(this, Constant.SHARE_CLOCK_HOUR, npClockHour.getValue());
 		SharedPreferenceUtil.put(this, Constant.SHARE_CLOCK_MIN, npClockMin.getValue());
 		SharedPreferenceUtil.put(this, Constant.SHARE_CLOCK_ON_OFF, isCheked);
-		if (isConnected(liteBlueService)) {
+		if (liteBlueService.isConnetted()) {
 			//00闹钟关闭 01闹钟开启 
 			Log.e("SettingClockActivity", isCheked?"闹钟：开！":"闹钟：关！");
 			liteBlueService.writeCharacticsUseConnectListener(ProtoclData.toByteForClockProtocl(npClockHour.getValue(), npClockMin.getValue(), isCheked ? 0 : 1));

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">R6 Watch</string>
+    <string name="app_name">Pules Watch</string>
+    <string name="app_version">version</string>
+    
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_step_goal">StepGoalActivity</string>
     <string name="title_activity_setting_heart_rate_set">SettingHeartRateSetActivity</string>
@@ -33,7 +35,7 @@
     <string name="alarm_time">Alarm time</string>
     <string name="alarm_info">Dear,once the alarm clock setting is completed,the connected watch will have specified time corresponding hint according to the your setting.</string>
     <!-- SettingHeartRateSetActivity -->
-    <string name="allow_the_maximum_heart">Allow the maximum heart</string>
+    <string name="allow_the_maximum_heart">Maximum heart</string>
     <string name="bpm">/bpm</string>
     <string name="max_hr_info">Dear,the maximum heart rate can only be between 40 and 200.Once the maximum heart setting is completeed,it will be synchrinized to watch.</string>
     <string name="max_heart">Maximum Heartbeat</string>
@@ -50,6 +52,13 @@
     <string name="sleep_info">Dear,because of the convenience of the rest data systematically,please don\'t set the overlap of time to rest.</string>
     <string name="sleep">Sleep</string>
     <!-- SettingStepGoalActivity -->
+    
+      <string name="sport_info_low">Appraise for sport : Low</string>
+        <string name="sport_info_nomal">Appraise for sport : Normal</string>
+        <string name="sport_info_high">Appraise for sport : High</string>
+        
+     <string name="high_step_info">Max:99990</string>
+    <string name="low_step_info">Min:500</string>
     <string name="target_step">Target step</string>
     <string name="target_step_title">Target Step</string>
     <string name="exercise_evaluation">Exercise_evaluation:</string>
@@ -90,13 +99,47 @@
            <string name="hour">hours</string> 
           
     <!-- SettingFragment -->
+             <string name="open_blue_ing">Bluetooth is opening.</string>
+        <string name="sync_ok">Sync complete</string>
+      <string name="confirm">Confirm</string>
+       <string name="confirm_exit">Exit?</string>
+      <string name="disconnect">Disconnect</string>
+        <string name="off">Off</string>
+    <string name="on">On</string>
+        <string name="disconnect_device">Disconnect device</string>
     <string name="setting">Setting</string>
     <string name="sync_data">Sync Data</string>
     <string name="sync_time">Sync time</string>
-    <string name="introduce">Introduce</string>
+    <string name="introduce">Version</string>
     <string name="exit">Exit</string>
     <string name="cancel">Cancel</string>
     <string name="goal_step">The target number:</string>
     <string name="title_activity_heart_rate_count">HeartRateCountActivity</string>
-
+    <string name="count">Data</string>
+    <string name="day_count">Day</string>
+    <string name="month_count">Month</string>
+    <string name="count_step">Step Count</string>
+    <string name="count_step_info">Maximum 306.9690 (million)</string>
+    <string name="count_sleep">Sleep statistics</string>
+    <string name="count_sleep_info">Maximum 744 (hours)</string>
+    <string name="count_step_info_day">Maximum 20000 (step)</string>
+    <string name="count_sleep_info_day">Maximum 24 (hours)</string>
+    <string name="count_hr">Heart rate statistics</string>
+    <string name="save">Save</string>
+    <string name="select">Select</string>
+    <string name="reset">Reset</string>
+    <string name="unit_bpm">(unit) Bpm</string>
+    
+    <string name="no_data">No Data</string>
+             <string name="open_blue">Enable Bluetooth?</string>
+    
+	<!-- settingBindedDEVICEACTIVITY -->
+             <string name="contact_binding">Contact binding?</string>
+                       <string name="no_device_binding">No device binding</string>
+                         <string name="no_binded">No Binding</string>
+                         <string name="binded">Binding equipment.</string>
+                                  <string name="device_not_match">Connected devices do not match</string>
+                                     <string name="connect_disconnect">Connect disconnect</string>
+                      <string name="being_connected">Being connected</string>
+	
 </resources>

@@ -168,4 +168,7 @@ public class MyAlertDialog {
 		setLayout();
 		dialog.show();
 	}
+	public void dismiss() {
+		dialog.dismiss();
+	}
 }

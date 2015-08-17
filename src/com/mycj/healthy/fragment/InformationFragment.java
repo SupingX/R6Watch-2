@@ -1,7 +1,11 @@
 package com.mycj.healthy.fragment;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
+
+import org.litepal.crud.DataSupport;
 
 import android.animation.ObjectAnimator;
 import android.content.BroadcastReceiver;
@@ -26,13 +30,17 @@ import android.widget.Toast;
 
 import com.mycj.healthy.BaseApp;
 import com.mycj.healthy.R;
+import com.mycj.healthy.entity.HeartRateData;
+import com.mycj.healthy.entity.HistoryData;
 import com.mycj.healthy.service.LiteBlueService;
 import com.mycj.healthy.ui.HeartRateCountActivity;
 import com.mycj.healthy.util.Constant;
 import com.mycj.healthy.util.DataUtil;
 import com.mycj.healthy.util.SharedPreferenceUtil;
+import com.mycj.healthy.util.TimeUtil;
 import com.mycj.healthy.view.ColorSeekBar;
 import com.mycj.healthy.view.DistanceView;
+import com.mycj.healthy.view.GreyCircle;
 import com.mycj.healthy.view.HeartRatePathView;
 import com.mycj.healthy.view.SimpleHeartRateView;
 import com.mycj.healthy.view.StepCircle;
@@ -41,10 +49,6 @@ import com.mycj.healthy.view.SimpleHeartRateView.OnScrollChangeListener;
 
 public class InformationFragment extends Fragment implements OnClickListener {
 	private ImageView imgStep, imgDistance, imgCal, imgHeart, imgSleep, imgMiddleSleep, imgRest;
-	// private StepFragment stepFragment;
-	// private DistanceFragment distanceFragment;
-	// private Fragment kcalFragment, heartFragment, sleepFragment,
-	// middleFragment, restFragment;
 	/**
 	 * 当前页面
 	 */
@@ -103,13 +107,15 @@ public class InformationFragment extends Fragment implements OnClickListener {
 			if (action.equals(LiteBlueService.LITE_CHARACTERISTIC_CHANGED)) {
 			} else if (action.equals(LiteBlueService.LITE_GATT_DISCONNECTED)) {
 			} else if (action.equals(LiteBlueService.LITE_CHARACTERISTIC_CHANGED_HEART_RATE)) {
-				final int hr = intent.getExtras().getInt(LiteBlueService.EXTRA_DATA_HEART_RATE);
+				Log.e("", "^^^^^^^^^^^^^^^");
+				final HeartRateData mHeartRateData = intent.getExtras().getParcelable(LiteBlueService.EXTRA_DATA_HEART_RATE);
+				Log.e("", "^^^^^^^^^^^^^^^mHeartRateData :" + mHeartRateData);
 				getActivity().runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						updateHeartRate(hr);
-//						hrv.setData(hr);
-//						pathView.setData(hr);
+						updateHeartRate(mHeartRateData.getHeartRate());
+						// hrv.setData(hr);
+						// pathView.setData(hr);
 					}
 				});
 			} else if (action.equals(LiteBlueService.LITE_CHARACTERISTIC_CHANGED_SLEEP)) {
@@ -118,7 +124,7 @@ public class InformationFragment extends Fragment implements OnClickListener {
 				getActivity().runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						updateSleep(data[0], data[1], data[3]);
+//						updateSleep(data[0], data[1], data[3]);
 					}
 				});
 			} else if (action.equals(LiteBlueService.LITE_CHARACTERISTIC_CHANGED_STEP)) {
@@ -126,7 +132,25 @@ public class InformationFragment extends Fragment implements OnClickListener {
 				getActivity().runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						updateStep(step);
+
+						getActivity().runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								if (step >= getGoalStep()) {
+									SharedPreferenceUtil.put(getActivity(), Constant.SHARE_STEP_ON_OFF, false);
+								}
+								updateStep(step);
+							}
+						});
+
+					}
+				});
+			} else if (action.equals(LiteBlueService.LITE_CHARACTERISTIC_CHANGED_GOAL_STEP)) {
+				Log.e("", "-------------------<<<<<<<<<>>>>>>>>>>>>>>>>>>-----------");
+				getActivity().runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						updateStep(completeStep);
 					}
 				});
 			}
@@ -135,9 +159,11 @@ public class InformationFragment extends Fragment implements OnClickListener {
 	private LiteBlueService mLiteBlueService;
 	private RelativeLayout rlHeart;
 	private TextView tvCalViewComplete;
-	private View hrCountView;
 	private ObjectAnimator animator1;
 	private ObjectAnimator animator2;
+	private GreyCircle sleepCircle;
+	private GreyCircle middleSleepCircle;
+	private GreyCircle restCircle;
 
 	@Override
 	public void onStart() {
@@ -203,7 +229,7 @@ public class InformationFragment extends Fragment implements OnClickListener {
 		tvHeartRateViewAdviser = (TextView) hrView.findViewById(R.id.tv_hr_info);
 		rlHeart = (RelativeLayout) hrView.findViewById(R.id.rl_hr);
 		seekBarHeartRate.setEnabled(false);
-		initHeartRate();
+
 		// //心率统计
 		// hrCountView = inflater.inflate(R.layout.activity_heart_rate_count,
 		// container, false);
@@ -215,22 +241,94 @@ public class InformationFragment extends Fragment implements OnClickListener {
 		sleepView = inflater.inflate(R.layout.view_infomation_sleep_1, container, false);
 		tvSleepAdviser = (TextView) sleepView.findViewById(R.id.tv_sleep_adv);
 		tvSleepValue = (TextView) sleepView.findViewById(R.id.tv_sleep_info);
+		sleepCircle = (GreyCircle) sleepView.findViewById(R.id.sleep_circle);
+		float maxSleep = getMaxSleep();// 单位：分钟
+		if (maxSleep != 0) {
+			sleepCircle.setMax(maxSleep / (1000 * 60));
+		}
+//		sleepCircle.setProgress(120);
 
 		// 午休
 		middleSleepView = inflater.inflate(R.layout.view_infomation_middle_sleep, container, false);
 		tvMidSleepAdviser = (TextView) middleSleepView.findViewById(R.id.tv_sleep_middle_adv);
 		tvMidSleepValue = (TextView) middleSleepView.findViewById(R.id.tv_sleep_middle_info);
+		middleSleepCircle = (GreyCircle) middleSleepView.findViewById(R.id.middle_sleep_circle);
+		float maxMiddleSleep = getMaxMiddleSleep();
+		if (maxMiddleSleep != 0) {
+			middleSleepCircle.setMax(maxMiddleSleep / (1000 * 60));
+		}
+//		middleSleepCircle.setProgress(0.1f);
 		// 小憩
 		restView = inflater.inflate(R.layout.view_infomation_rest, container, false);
 		tvRestAdviser = (TextView) restView.findViewById(R.id.tv_sleep_rest_adv);
 		tvRestValue = (TextView) restView.findViewById(R.id.tv_sleep_rest_info);
-
+		restCircle = (GreyCircle) restView.findViewById(R.id.rest_circle);
+		restCircle.setMax(60*6);//小憩最大值为60*12分钟
 		// initSleep();
 		// 初始化
 		frame.addView(stepView);
 
 		setListener();
 		return view;
+	}
+
+	private float getMaxMiddleSleep() {
+		int middleStartHourValue = (int) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_MIDDLE_SLEEP_START_HOUR, 12);
+		int middleStartMinValue = (int) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_MIDDLE_SLEEP_START_MIN, 00);
+		int middleEndHourValue = (int) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_MIDDLE_SLEEP_END_HOUR, 12);
+		int middleEndMinValue = (int) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_MIDDLE_SLEEP_END_MIN, 00);
+		long diff = getLong(middleStartHourValue, middleStartMinValue, middleEndHourValue, middleEndMinValue);
+		Log.v("", "午睡" + "时间差：" + diff);
+		return diff;
+	}
+
+	/**
+	 * 根据设定的睡眠/午休 时间 返回之间的时间差
+	 * 
+	 * @param startHourValue
+	 * @param startMinValue
+	 * @param endHourValue
+	 * @param endMinValue
+	 * @return
+	 */
+	private long getLong(int startHourValue, int startMinValue, int endHourValue, int endMinValue) {
+		Log.v("", " 开始时刻 ：" + startHourValue + ":" + startMinValue);
+		Log.v("", " 结束时刻 ：" + endHourValue + ":" + endMinValue);
+		Calendar startCalendar = Calendar.getInstance();
+		Date date = new Date();
+		Log.v("", " 现在时间 ：" + TimeUtil.dateToString(date, "yyyy-MM-dd HH:mm:ss"));
+		startCalendar.setTime(date);
+		startCalendar.set(Calendar.HOUR_OF_DAY, startHourValue);
+		startCalendar.set(Calendar.MINUTE, startMinValue);
+
+		Calendar endCalendar = Calendar.getInstance();
+		endCalendar.setTime(date);
+		endCalendar.set(Calendar.HOUR_OF_DAY, endHourValue);
+		endCalendar.set(Calendar.MINUTE, endMinValue);
+		
+		if (endCalendar.get(Calendar.HOUR_OF_DAY) < startCalendar.get(Calendar.HOUR_OF_DAY)) {
+			Log.v("", "结束小时小于开始");
+			endCalendar.add(Calendar.DAY_OF_YEAR, 1);
+		} else if (endCalendar.get(Calendar.HOUR_OF_DAY) == startCalendar.get(Calendar.HOUR_OF_DAY)) {
+			if (endCalendar.get(Calendar.MINUTE) <= startCalendar.get(Calendar.MINUTE)) {
+				Log.v("", "结束分钟小于开始");
+				endCalendar.add(Calendar.DAY_OF_YEAR, 1);
+			}
+		}
+		
+		Log.v("", " 开始时间 ：" + TimeUtil.dateToString(startCalendar.getTime(), "yyyy-MM-dd HH:mm:ss"));
+		Log.v("", " 结束时间 ：" + TimeUtil.dateToString(endCalendar.getTime(), "yyyy-MM-dd HH:mm:ss"));
+		return endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis();
+	}
+
+	private long getMaxSleep() {
+		int sleepStartHourValue = (int) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_SLEEP_START_HOUR, 12);
+		int sleepStartMinValue = (int) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_SLEEP_START_MIN, 00);
+		int sleepEndHourValue = (int) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_SLEEP_END_HOUR, 12);
+		int sleepEndMinValue = (int) SharedPreferenceUtil.get(getActivity(), Constant.SHARE_SLEEP_END_MIN, 00);
+		long diff = getLong(sleepStartHourValue, sleepStartMinValue, sleepEndHourValue, sleepEndMinValue);
+		Log.v("", "睡眠时间差：" + diff);
+		return diff;
 	}
 
 	@Override
@@ -240,7 +338,8 @@ public class InformationFragment extends Fragment implements OnClickListener {
 		initDistance(isModel);
 		initCal(isModel);
 		initSleep();
-
+		initHeartRate();
+		updateSleep();
 		Log.v("InformationFragment", "Fragment生命周期之onResume()");
 		super.onResume();
 		startHeartRateAnimation();
@@ -285,8 +384,10 @@ public class InformationFragment extends Fragment implements OnClickListener {
 			break;
 		case R.id.img_sport_hr:
 			clearSelected();
+			startHeartRateAnimation();
 			frame.removeAllViews();
 			frame.addView(hrView);
+			startHeartRateAnimation();
 			imgHeart.setImageResource(R.drawable.sport_monitor_hr_icon_on);
 			break;
 		case R.id.img_sleep:
@@ -294,6 +395,7 @@ public class InformationFragment extends Fragment implements OnClickListener {
 			frame.removeAllViews();
 			frame.addView(sleepView);
 			imgSleep.setImageResource(R.drawable.sleep_tracking_sleep_icon_on);
+	
 			break;
 		case R.id.img_sleep_mid:
 			clearSelected();
@@ -399,7 +501,7 @@ public class InformationFragment extends Fragment implements OnClickListener {
 	private void initHeartRate() {
 		tvHeartRateViewValue.setText("" + currentHr);
 		seekBarHeartRate.setMax(180);
-		seekBarHeartRate.setProgress(0);
+		seekBarHeartRate.setProgress(currentHr);
 		tvHeartRateViewAdviser.setText("");
 		tvHeartRateInfo.setText(currentHr + " bpm");
 		checkHeartRateInfo(currentHr);
@@ -414,17 +516,17 @@ public class InformationFragment extends Fragment implements OnClickListener {
 		String middleStr = resource.getString(R.string.siesta_tips);
 		String restStr = resource.getString(R.string.nap_tips);
 
-		tvSleepInfo.setText("" + DataUtil.format(sleepHour) + hourStr);
+		tvSleepInfo.setText("" + DataUtil.format(sleepHour/60f) + hourStr);
 		checkSleepAdviser(sleepHour);
-		tvSleepValue.setText(sleepStr + DataUtil.format(sleepHour) + hourStr);
+		tvSleepValue.setText(sleepStr + DataUtil.format(sleepHour/60f) + hourStr);
 
-		tvMiddleInfo.setText("" + DataUtil.format(middleHour) + hourStr);
+		tvMiddleInfo.setText("" + DataUtil.format(middleHour/60f) + hourStr);
 		checkMidSleepAdviser(middleHour);
-		tvMidSleepValue.setText(middleStr + DataUtil.format(middleHour) + hourStr);
+		tvMidSleepValue.setText(middleStr + DataUtil.format(middleHour/60f) + hourStr);
 
-		tvRestInfo.setText("" + DataUtil.format(restHour) + hourStr);
+		tvRestInfo.setText("" + DataUtil.format(restHour/60f) + hourStr);
 		checkRestAdviser(restHour);
-		tvRestValue.setText(restStr + DataUtil.format(restHour) + hourStr);
+		tvRestValue.setText(restStr + DataUtil.format(restHour/60f) + hourStr);
 	}
 
 	/**
@@ -440,6 +542,7 @@ public class InformationFragment extends Fragment implements OnClickListener {
 		// tvStepViewStep.setText(completeStr + step +stepUnitStr);
 		// tvStepInfo.setText("" + step + stepUnitStr);
 		boolean isModel = getStepModel();
+		Log.e("", "````````````````````````````````````isModel : " + isModel);
 		initStep(isModel);
 		updateDistance(step);
 		updateCal(step);
@@ -465,7 +568,7 @@ public class InformationFragment extends Fragment implements OnClickListener {
 		// // tvCalViewCompleteInfo.setText("完成卡洛里："+stepToCal(step));
 		// seekBarCal.setProgress((int) stepToCal(step));
 		// tvCalViewComplete.setText(DataUtil.format(stepToCal(step)) + "");
-//		 checkCalInfo(stepToCal(step), stepToCal(getGoalStep()));
+		// checkCalInfo(stepToCal(step), stepToCal(getGoalStep()));
 		boolean isModel = getStepModel();
 		initCal(isModel);
 	}
@@ -474,15 +577,33 @@ public class InformationFragment extends Fragment implements OnClickListener {
 		currentHr = hr;
 		// tvHeartRateViewValue.setText(String.valueOf(hr));
 		// seekBarHeartRate.setProgress(hr);
-//		 checkHeartRateInfo(hr);
+		// checkHeartRateInfo(hr);
 		// tvHeartRateInfo.setText(hr + " bpm");
 		initHeartRate();
 	}
 
-	private void updateSleep(int sleep, int mid, int rest) {
-		sleepHour = sleep;
-		middleHour = mid;
-		restHour = rest;
+	private void updateSleep() {
+		String dateStr1=  TimeUtil.dateToString(new Date());
+		List<HistoryData> historyDatas = DataSupport.where("historyDate=?",dateStr1).find(HistoryData.class);
+		Log.v("", "____________________historyDatas : " + historyDatas.size());
+		if (historyDatas!=null&&historyDatas.size()!=0) {
+			Log.v("",  historyDatas.get(0).toString());
+			HistoryData data = historyDatas.get(0);
+			sleepCircle.setProgress(data.getSleep());
+			middleSleepCircle.setProgress(data.getMiddle());
+			restCircle.setProgress(data.getRest());
+			sleepHour = data.getSleep();
+			middleHour = data.getMiddle();
+			restHour = data.getRest();
+		}
+//		List<HistoryData> historyDatasAll = DataSupport.findAll(HistoryData.class);
+//		Log.v("", "______________________________________________________");
+//		for(HistoryData data : historyDatasAll){
+//			Log.v("", data.toString());
+//		}
+//		Log.v("", "______________________________________________________");
+		
+	
 		//
 		initSleep();
 	}
@@ -516,11 +637,11 @@ public class InformationFragment extends Fragment implements OnClickListener {
 	}
 
 	private void startHeartRateAnimation() {
-		animator1 = ObjectAnimator.ofFloat(imgHr, "scaleX", 1f, 3f, 1f);
-		animator2 = ObjectAnimator.ofFloat(imgHr, "scaleY", 1f, 3f, 1f);
-		animator1.setDuration(1000);
+		animator1 = ObjectAnimator.ofFloat(imgHr, "scaleX", 0.8f, 1.8f, 0.8f);
+		animator2 = ObjectAnimator.ofFloat(imgHr, "scaleY", 0.8f, 1.8f, 0.8f);
+		animator1.setDuration(1200);
 		animator1.setRepeatCount(-1); // 动画循环播放的次数
-		animator2.setDuration(1000);
+		animator2.setDuration(1200);
 		animator2.setRepeatCount(-1); // 动画循环播放的次数
 		animator1.start();
 		animator2.start();
@@ -582,13 +703,16 @@ public class InformationFragment extends Fragment implements OnClickListener {
 		String sleepStr = resource.getString(R.string.sleep_eval);
 		String lowStr = resource.getString(R.string.eval_sleep_leak);
 		String normalStr = resource.getString(R.string.eval_sleep_normal);
+		String noData = resource.getString(R.string.no_data);
 		String highStr = resource.getString(R.string.eval_sleep_high);
 		StringBuffer sb = new StringBuffer();
 		sb.append(sleepStr);
-		if (value >=0 && value < 6) {
+		if (value > 0 && value < 6) {
 			sb.append(lowStr);
 		} else if (value >= 6 && value < 9) {
 			sb.append(normalStr);
+		} else if (value == 0) {
+			sb.append(noData);
 		} else {
 			sb.append(highStr);
 		}
@@ -600,10 +724,13 @@ public class InformationFragment extends Fragment implements OnClickListener {
 		String lowStr = resource.getString(R.string.eval_sleep_leak);
 		String normalStr = resource.getString(R.string.eval_sleep_normal);
 		String highStr = resource.getString(R.string.eval_sleep_high);
+		String noData = resource.getString(R.string.no_data);
 		StringBuffer sb = new StringBuffer();
 		sb.append(siestaStr);
-		if (value >=0 && value < 0.5) {
+		if (value > 0 && value < 0.5) {
 			sb.append(lowStr);
+		} else if (value == 0) {
+			sb.append(noData);
 		} else if (value >= 0.5 && value < 2) {
 			sb.append(normalStr);
 		} else {
@@ -613,16 +740,20 @@ public class InformationFragment extends Fragment implements OnClickListener {
 	}
 
 	private void checkRestAdviser(float value) {
+		String noData = resource.getString(R.string.no_data);
 		String napStr = resource.getString(R.string.nap_eval);
 		String lowStr = resource.getString(R.string.eval_sleep_leak);
 		String normalStr = resource.getString(R.string.eval_sleep_normal);
 		String highStr = resource.getString(R.string.eval_sleep_high);
 		StringBuffer sb = new StringBuffer();
 		sb.append(napStr);
-		if (value >=0 && value < 1) {
+
+		if (value > 0 && value < 1) {
 			sb.append(lowStr);
 		} else if (value >= 1 && value < 6) {
 			sb.append(normalStr);
+		} else if (value == 0) {
+			sb.append(noData);
 		} else {
 			sb.append(highStr);
 		}
@@ -630,6 +761,7 @@ public class InformationFragment extends Fragment implements OnClickListener {
 	}
 
 	private void clearSelected() {
+		stopHeartRateAnimation();
 		imgStep.setImageResource(R.drawable.sport_monitor_pedomete_icon);
 		imgDistance.setImageResource(R.drawable.sport_monitor_distance_icon);
 		imgCal.setImageResource(R.drawable.sport_monitor_cal_icon);

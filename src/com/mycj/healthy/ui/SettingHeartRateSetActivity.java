@@ -90,7 +90,12 @@ public class SettingHeartRateSetActivity extends BaseSettingActivity {
 
 	@Override
 	public void imgConfirm() {
-		int value = Integer.valueOf(etHeartRateMax.getText().toString().trim());
+		int value = 0 ;
+		String valueStr = etHeartRateMax.getText().toString().trim();
+		if (valueStr.equals("")) {
+			return ;
+		}
+		value= Integer.valueOf(valueStr);
 		if (value < MIN) {
 			toast("最低40");
 			return;
@@ -99,7 +104,7 @@ public class SettingHeartRateSetActivity extends BaseSettingActivity {
 			return;
 		}
 		SharedPreferenceUtil.put(this, Constant.SHARE_HEART_RATE_MAX, value);
-		if (isConnected(liteBlueService)) {
+		if (liteBlueService.isConnetted()) {
 			// liteBlueService.writeCharactics(ProtoclData.toByteForHeartRateMaxProtocl(value));
 			liteBlueService.writeCharacticsUseConnectListener(ProtoclData.toByteForHeartRateMaxProtocl(value));
 		} else {

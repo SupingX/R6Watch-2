@@ -5,8 +5,9 @@
     <corners android:radius="0dp" />
     <!-- 描边 -->
     <stroke
+        android:color="@color/orange"
         android:width="2dp"
-        android:color="@color/orange" />
+     />
     <!-- 填充实心 -->
     <solid android:color="@color/white" />
 	

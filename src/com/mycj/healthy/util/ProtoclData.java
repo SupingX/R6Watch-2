@@ -1,8 +1,18 @@
 package com.mycj.healthy.util;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import com.mycj.healthy.entity.HeartRateData;
+import com.mycj.healthy.entity.HistoryData;
+import com.mycj.healthy.entity.SportData;
+import com.mycj.healthy.service.LiteBlueService;
 
 import android.content.Context;
 import android.util.Log;
@@ -19,6 +29,8 @@ public class ProtoclData {
 	public final static String PROTOCL_ATUO_HEART_RATE = "19";
 	public final static String PROTOCL_UPDATA = "05";
 
+	
+	// <----------------------------------write start------------------------------------>
 	/**
 	 * 
 	 * 同步日期的协议 byte[]
@@ -34,7 +46,7 @@ public class ProtoclData {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		int year = c.get(Calendar.YEAR);
-		int month = c.get(Calendar.MONTH)+1;
+		int month = c.get(Calendar.MONTH) + 1;
 		int day = c.get(Calendar.DAY_OF_MONTH);
 		int hour = 0;
 		int type = getTimeFormat(context);
@@ -48,9 +60,16 @@ public class ProtoclData {
 		}
 		int minute = c.get(Calendar.MINUTE);
 		int second = c.get(Calendar.SECOND);
-
-		String yearHighStr = getYearHightHexString(year);
-		String yearLowStr = getYearLowHexString(year);
+		
+		String yearStr = toHexStringForUpdateTime(year);
+	
+		
+		String yearHighStr = yearStr.substring(0, 2);
+		String yearLowStr = yearStr.substring(2, 4);
+		Log.v("", "yearStr : " + yearStr);
+		Log.v("", "yearHighStr : " + yearHighStr);
+		Log.v("", "yearLowStr : " + yearLowStr);
+		
 		String monthStr = DataUtil.toHexString(month);
 		String dayStr = DataUtil.toHexString(day);
 		String hourStr = DataUtil.toHexString(hour);
@@ -193,32 +212,110 @@ public class ProtoclData {
 		sb.append(PROTOCL_ATUO_HEART_RATE);
 		String openStr = DataUtil.toHexString(open);
 		sb.append(openStr);
-		String timeStr = "01";
+		String timeStr = DataUtil.toHexString(60);
 		sb.append(timeStr);
 		Log.v("", "提醒协议 : " + sb.toString());
 		return DataUtil.toBytesByString(sb.toString());
 	}
 
 	/**
-	 * 同步数据
+	 * 同步所有数据
 	 * 
-	 * @param offset
 	 * @return
 	 */
-	public static byte[] toByteForAutoHeartRateProtocl() {
+	public static byte[] toByteUpdateAllProtocl() {
 		StringBuffer sb = new StringBuffer();
 		sb.append(PROTOCL_UPDATA);
-
-		// 未完成
-
-		Log.v("", "gengxin协议 : " + sb.toString());
+		sb.append("11");
+		Log.v("", "同步所有协议 : " + sb.toString());
 		return DataUtil.toBytesByString(sb.toString());
 	}
 
-	// <----------------------------------notify------------------------------------>
-	// //
+	/**
+	 * 同步当天数据
+	 * @return
+	 */
+	public static byte[] toByteUpdateTodayProtocl() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(PROTOCL_UPDATA);
+		sb.append("10");
+		Log.v("", "同步今天协议 : " + sb.toString());
+		return DataUtil.toBytesByString(sb.toString());
+	}
+
 
 	/**
+	 * App同步设置到手表
+	 * 
+	 */
+	public static boolean syncSetting(final LiteBlueService service ,Context context) {
+		 final List<byte[]> byteList;
+		final long start = System.currentTimeMillis();
+		Log.v("LiteBlueServiceTest", "_______________________同步设置开始。");
+		int step = (int) SharedPreferenceUtil.get(context, Constant.SHARE_STEP_GOAL, 500);
+		int model = (boolean) SharedPreferenceUtil.get(context, Constant.SHARE_STEP_ON_OFF, false) ? 1 : 0;
+		int hour = (int) SharedPreferenceUtil.get(context, Constant.SHARE_CLOCK_HOUR, 12);
+		int minute = (int) SharedPreferenceUtil.get(context, Constant.SHARE_CLOCK_MIN, 00);
+		int open = (boolean) SharedPreferenceUtil.get(context, Constant.SHARE_CLOCK_ON_OFF, false) ? 0 : 1;
+		int sleepStartHour = (int) SharedPreferenceUtil.get(context, Constant.SHARE_SLEEP_START_HOUR, 22);
+		int sleepStartMin = (int) SharedPreferenceUtil.get(context, Constant.SHARE_SLEEP_START_MIN, 00);
+		int sleepEndHour = (int) SharedPreferenceUtil.get(context, Constant.SHARE_SLEEP_END_HOUR, 8);
+		int sleepEndMin = (int) SharedPreferenceUtil.get(context, Constant.SHARE_SLEEP_END_MIN, 00);
+		int middleStartHour = (int) SharedPreferenceUtil.get(context, Constant.SHARE_MIDDLE_SLEEP_START_HOUR, 12);
+		int middleStartMin = (int) SharedPreferenceUtil.get(context, Constant.SHARE_MIDDLE_SLEEP_START_MIN, 00);
+		int middleEndHour = (int) SharedPreferenceUtil.get(context, Constant.SHARE_MIDDLE_SLEEP_END_HOUR, 14);
+		int middleEndMin = (int) SharedPreferenceUtil.get(context, Constant.SHARE_MIDDLE_SLEEP_END_MIN, 00);
+		int[] sleep = new int[] { sleepStartHour, sleepStartMin, sleepEndHour, sleepEndMin, middleStartHour, middleStartMin, middleEndHour, middleEndMin };
+		int max = (int) SharedPreferenceUtil.get(context, Constant.SHARE_HEART_RATE_MAX, 100);
+		int openForAutoHr = (boolean) SharedPreferenceUtil.get(context, Constant.SHARE_AUTO_HEART_RATE_ON_OFF, false) ? 1 : 0;
+		Log.v("ProtoclData", "--最大目标步数 : " + step + "是否开启 : " + model);
+		Log.v("ProtoclData", "--闹钟 : " + hour + ":" + minute + ",是否开启 : " + open);
+		Log.v("ProtoclData", "--睡眠开始时间 : " + sleepStartHour + ":" + sleepStartMin + "睡眠结束时间 : " + sleepEndHour + ":" + sleepEndMin);
+		Log.v("ProtoclData", "--午睡开始时间 : " + middleStartHour + ":" + middleStartMin + "午睡结束时间 : " + middleEndHour + ":" + middleEndMin);
+		Log.v("ProtoclData", "--最大心率设置 : " + max);
+		Log.v("ProtoclData", "--自动心率设置 : " + openForAutoHr);
+		byteList = new ArrayList<>();
+		byteList.add(ProtoclData.toByteForDateProtocl(new Date(), context));
+		byteList.add(ProtoclData.toByteForStepProtocl(step, model));
+		byteList.add(ProtoclData.toByteForClockProtocl(hour, minute, open));
+		byteList.add(ProtoclData.toByteForSleepProtocl(sleep));
+		byteList.add(ProtoclData.toByteForHeartRateMaxProtocl(max));
+		byteList.add(ProtoclData.toByteForAutoHeartRateProtocl(openForAutoHr));
+		byteList.add(ProtoclData.toByteForPhoneMessageIncomingProtocl(MessageUtil.readMissCall(context),
+				MessageUtil.getNewSmsCount(context) + MessageUtil.getNewMmsCount(context)));
+
+		
+		ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+		for (int i = 0; i < byteList.size(); i++) {
+			final int index = i;
+//			try {
+//				Thread.sleep(index * 500);
+//			} catch (InterruptedException e) {
+//				Log.e("", "_____________________i："+i);
+//				e.printStackTrace();
+//			}
+			service.writeValueToDevice(byteList.get(index));
+			
+//			Log.e("", "_____________________i："+i);
+//			singleThreadExecutor.execute(new Runnable() {
+//				@Override
+//				public void run() {
+//					System.out.println(index);
+//					service.writeCharacticsUseConnectListener(byteList.get(index));
+//				}
+//			});
+		}
+		final long end = System.currentTimeMillis();
+		Log.v("LiteBlueServiceTest", "_______________________同步设置结束。耗时 ："+(end - start) +"ms");
+		return true;
+	}
+		
+	// <----------------------------------write end------------------------------------>
+	
+	// <----------------------------------notify start------------------------------------>
+
+	/**
+	 * 弃用 
 	 * 解析为睡眠数据
 	 * 
 	 * @param data
@@ -258,48 +355,40 @@ public class ProtoclData {
 	}
 
 	/**
-	 * 解析为运动数据
+	 * 得到历史数据
 	 * 
 	 * @param data
 	 * @return
 	 */
-	public static HashMap<String, Integer> parserDataForSport(byte[] data) {
-		HashMap<String, Integer> sportData = null;
-		String hexString = DataUtil.getStringByBytes(data);
-		if (hexString.substring(0, 2).equals("05")) {
-			if (hexString.length() == 22 && hexString.substring(2, 4).equals("20")) { // 运动数据
-				String hexSport = hexString.substring(2, hexString.length());
-				Log.v("ProtoclData", "运动数据 ：" + hexSport);
-				String month = hexSport.substring(2, 4);
-				String day = hexSport.substring(4, 6);
-				String hour = hexSport.substring(6, 8);
-				String minute = hexSport.substring(8, 10);
-				String second = hexSport.substring(10, 12);
-				String step = hexSport.substring(12, 20);
-
-				int monthValue = DataUtil.hexStringToInt(month);
-				int dayValue = DataUtil.hexStringToInt(day);
-				int hourValue = DataUtil.hexStringToInt(hour);
-				int minuteValue = DataUtil.hexStringToInt(minute);
-				int secondValue = DataUtil.hexStringToInt(second);
-				int stepValue = DataUtil.hexStringToInt(step);
-				Log.v("ProtoclData", "---------------------------------");
-				Log.v("ProtoclData", "运动数据 ：" + hexString);
-				Log.v("ProtoclData", "stepValue ：" + stepValue);
-				Log.v("ProtoclData", "---------------------------------");
-				sportData = new HashMap<>();
-				sportData.put("mouth", monthValue);
-				sportData.put("day", dayValue);
-				sportData.put("hour", hourValue);
-				sportData.put("minute", minuteValue);
-				sportData.put("second", secondValue);
-				sportData.put("step", stepValue);
-
-			} else {
-				Log.e("ProtoclData", "没有运动数据");
-			}
+	public static HistoryData parserProtoclDataForHistory(byte[] data) {
+		// 得到16进制字符串
+				String hexString = DataUtil.getStringByBytes(data);
+		Log.v("ProtoclData", "解析历史数据"+hexString);
+		// 判断长度
+		if (hexString.length() != 24) {
+			Log.e("ProtoclData", "协议长度错误：" + hexString);
+			return null;
 		}
-		return sportData;
+		String protoclStr = hexString.substring(0, 2);
+		if (!protoclStr.equals(PROTOCL_UPDATA)) {
+			Log.e("ProtoclData", "错误的协议：" + hexString);
+			return null;
+		}
+		// 分割数据
+		String dateStr = hexString.substring(2, 4);
+		String sleepStr = hexString.substring(4, 8);
+		String middleStr = hexString.substring(8, 12);
+		String restStr = hexString.substring(12, 16);
+		String stepStr = hexString.substring(16, 24);
+		// 解析
+		String date = getDate(dateStr);
+		int sleep = Integer.valueOf(sleepStr, 16);// 单位分钟
+		int middle = Integer.valueOf(middleStr, 16);// 单位分钟
+		int rest = Integer.valueOf(restStr, 16);// 单位分钟
+		int step = Integer.valueOf(stepStr, 16);// 单位分钟
+		// 数据 --> 类
+		HistoryData historyData = new HistoryData(date, sleep, middle, rest, step);
+		return historyData;
 	}
 
 	/**
@@ -343,21 +432,6 @@ public class ProtoclData {
 
 		return 0;
 	}
-	
-	public static int actualSteps(byte[] data) {
-		if (data == null || data.length < 4) {
-			return 0;			
-		};
-		
-		byte[] temp = new byte[4];
-		for (int i = 0; i < data.length; i++) {
-			temp[3 - i] = data[i];
-		}
-		
-		String tempStr = DataUtil.getStringByBytes(temp);
-		
-		return DataUtil.hexToInt(tempStr);
-	}
 
 	/**
 	 * 实时步数
@@ -365,100 +439,174 @@ public class ProtoclData {
 	 * @param data
 	 * @return
 	 */
-	public static HashMap<String, Integer> parserDataForStep(byte[] data) {
-		HashMap<String, Integer> sportData = null;
+	public static SportData parserDataForStep(byte[] data) {
 		String hexString = DataUtil.getStringByBytes(data);
 		Log.v("ProtoclData", "-----------------hexString----------------" + hexString);
-		if (hexString.substring(0, 2).equals("23") && hexString.length() == 20) {
-
-			String month = hexString.substring(2, 4);
-			String day = hexString.substring(4, 6);
-			String hour = hexString.substring(6, 8);
-			String minute = hexString.substring(8, 10);
-			String second = hexString.substring(10, 12);
-
-			int monthValue = Integer.parseInt(month, 16);
-			int dayValue = Integer.parseInt(day, 16);
-			int hourValue = Integer.parseInt(hour, 16);
-			int minuteValue = Integer.parseInt(minute, 16);
-			int secondValue = Integer.parseInt(second, 16);
-			byte [] stepValueData  = new byte[]{data[6],data[7],data[8],data[9]};
-			int stepValue = actualSteps(stepValueData);
-
-			// byte [] value = new byte[]{data[6],data[7],data[8],data[9]};
-
-			// int dayValue = DataUtil.hexStringToInt(day);
-			// int hourValue = DataUtil.hexStringToInt(hour);
-			// int minuteValue = DataUtil.hexStringToInt(minute);
-			// int secondValue = DataUtil.hexStringToInt(second);
-			// int stepValue = DataUtil.hexStringToInt(step);
-			Log.v("ProtoclData", "---------------------------------");
-			Log.v("ProtoclData", "实时步数数据 ：" + hexString);
-			Log.v("ProtoclData", "stepValue ：" + stepValue);
-			Log.v("ProtoclData", "---------------------------------");
-
-			sportData = new HashMap<>();
-			sportData.put("mouth", monthValue);
-			sportData.put("day", dayValue);
-			sportData.put("hour", hourValue);
-			sportData.put("minute", minuteValue);
-			sportData.put("second", secondValue);
-			sportData.put("step", stepValue);
-
-		} else {
-			Log.e("ProtoclData", "没有实时步数数据");
+		if (hexString.length() != 20) {
+			Log.e("ProtoclData", "协议长度错误：" + hexString);
+			return null;
 		}
+		if (!hexString.substring(0, 2).equals("23")) {
+			Log.e("ProtoclData", "错误的协议：" + hexString);
+			return null;
+		}
+
+		String month = hexString.substring(2, 4);
+		String day = hexString.substring(4, 6);
+		String hour = hexString.substring(6, 8);
+		String minute = hexString.substring(8, 10);
+		String second = hexString.substring(10, 12);
+
+		int monthValue = Integer.parseInt(month, 16);
+		int dayValue = Integer.parseInt(day, 16);
+		int hourValue = Integer.parseInt(hour, 16);
+		int minuteValue = Integer.parseInt(minute, 16);
+		int secondValue = Integer.parseInt(second, 16);
+
+		byte[] stepValueData = new byte[] { data[6], data[7], data[8], data[9] };
+		int stepValue = actualSteps(stepValueData);
+
+		SportData sportData = new SportData();
+		sportData.setStep(stepValue);
+
 		return sportData;
 	}
-
+	
+	/**
+	 * 最大目标步数
+	 * @param data
+	 * @return
+	 */
+	public static int[] parserDataForGoalStep(byte[] data) {
+		String hexString = DataUtil.getStringByBytes(data);
+		Log.v("ProtoclData", "-----------------hexString----------------" + hexString);
+		if (hexString.length() != 12) {
+			Log.e("ProtoclData", "协议长度错误：" + hexString);
+			return null;
+		}
+		if (!hexString.substring(0, 2).equals("17")) {
+			Log.e("ProtoclData", "错误的协议：" + hexString);
+			return null;
+		}
+		int model = Integer.valueOf(hexString.substring(2,4),16);
+		byte[] stepValueData = new byte[] { data[2], data[3], data[4], data[5] };
+		int goalStep = actualSteps(stepValueData);
+		return new int[]{model,goalStep};
+	}
+	/**
+	 * 最大心率
+	 * @param data
+	 * @return
+	 */
+	public static int parserDataForMaxHeartRate(byte[] data) {
+		String hexString = DataUtil.getStringByBytes(data);
+		Log.v("ProtoclData", "-----------------hexString----------------" + hexString);
+		if (hexString.length() != 4) {
+			Log.e("ProtoclData", "协议长度错误：" + hexString);
+			return 0;
+		}
+		if (!hexString.substring(0, 2).equals("18")) {
+			Log.e("ProtoclData", "错误的协议：" + hexString);
+			return 0;
+		}
+		int maxHeartRate = Integer.valueOf(hexString.substring(2,4),16);
+		return maxHeartRate;
+	}
+	
 	/**
 	 * 实时心跳
 	 * 
 	 * @param data
 	 * @return
 	 */
-	public static HashMap<String, Integer> parserDataForHeartRate(byte[] data) {
-		HashMap<String, Integer> heartRateData = null;
+	public static HeartRateData parserDataForHeartRate(byte[] data) {
 		String hexString = DataUtil.getStringByBytes(data);
-		// Log.v("ProtoclData", "hexString.length : "+ hexString.length());
-		// Log.v("ProtoclData", "hsubstring(0, 2) : "+ hexString.substring(0,
-		// 2));
-		if (hexString.substring(0, 2).equals("25") && hexString.length() == 14) {
-			String month = hexString.substring(2, 4);
-			String day = hexString.substring(4, 6);
-			String hour = hexString.substring(6, 8);
-			String minute = hexString.substring(8, 10);
-			String second = hexString.substring(10, 12);
-			String heartRate = hexString.substring(12, 14);
-
-			int monthValue = DataUtil.hexStringToInt(month);
-			int dayValue = DataUtil.hexStringToInt(day);
-			int hourValue = DataUtil.hexStringToInt(hour);
-			int minuteValue = DataUtil.hexStringToInt(minute);
-			int secondValue = DataUtil.hexStringToInt(second);
-			int heartRateValue = DataUtil.hexStringToInt(heartRate);
-
-			Log.v("ProtoclData", "---------------------------------");
-			Log.v("ProtoclData", "实时心跳数据 ：" + hexString);
-			Log.v("ProtoclData", "stepValue ：" + heartRateValue);
-			Log.v("ProtoclData", "---------------------------------");
-
-			heartRateData = new HashMap<>();
-			heartRateData.put("mouth", monthValue);
-			heartRateData.put("day", dayValue);
-			heartRateData.put("hour", hourValue);
-			heartRateData.put("minute", minuteValue);
-			heartRateData.put("second", secondValue);
-			heartRateData.put("heartRate", heartRateValue);
-
-		} else {
-			Log.e("ProtoclData", "没有实时心跳数据");
+		Log.v("ProtoclData", "-----------------hexString----------------" + hexString);
+		if (hexString.length() != 14) {
+			Log.e("ProtoclData", "协议长度错误：" + hexString);
+			return null;
 		}
-		return heartRateData;
+		if (!hexString.substring(0, 2).equals("25")) {
+			Log.e("ProtoclData", "错误的协议：" + hexString);
+			return null;
+		}
+		String month = hexString.substring(2, 4);
+		String day = hexString.substring(4, 6);
+		String hour = hexString.substring(6, 8);
+		String minute = hexString.substring(8, 10);
+		String second = hexString.substring(10, 12);
+		String heartRate = hexString.substring(12, 14);
+
+		int monthValue = DataUtil.hexStringToInt(month);
+		int dayValue = DataUtil.hexStringToInt(day);
+		int hourValue = DataUtil.hexStringToInt(hour);
+		int minuteValue = DataUtil.hexStringToInt(minute);
+		int secondValue = DataUtil.hexStringToInt(second);
+		int heartRateValue = Integer.valueOf(heartRate, 16);
+		String dateStr  = TimeUtil.dateToString(new Date());
+		HeartRateData mHeartRateData = new HeartRateData(dateStr, heartRateValue);
+		return mHeartRateData;
 	}
 
 	// <----------------------------------notify------------------------------------>
-	// //
+
+	private static int actualSteps(byte[] data) {
+		if (data == null || data.length != 4) {
+			return 0;
+		}
+		;
+	
+		byte[] temp = new byte[4];
+		for (int i = 0; i < data.length; i++) {
+			temp[3 - i] = data[i];
+		}
+	
+		String tempStr = DataUtil.getStringByBytes(temp);
+	
+		return DataUtil.hexToInt(tempStr);
+	}
+
+	private static String getDate(String dateStr) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String dateString;
+		Date date = new Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		switch (Integer.valueOf(dateStr,16)) {
+		case 0x10:
+			// 今天
+			break;
+		case 0x11:
+			c.add(Calendar.DATE, -1);// 昨天
+			date = c.getTime();
+			break;
+		case 0x12:
+			c.add(Calendar.DATE, -2);// 前天
+			date = c.getTime();
+			break;
+		case 0x13:
+			c.add(Calendar.DATE, -3);// 大前天
+			date = c.getTime();
+			break;
+		case 0x14:
+			c.add(Calendar.DATE, -4);
+			date = c.getTime();
+			break;
+		case 0x15:
+			c.add(Calendar.DATE, -5);
+			date = c.getTime();
+			break;
+		case 0x16:
+			c.add(Calendar.DATE, -6);
+			date = c.getTime();
+			break;
+	
+		default:
+			break;
+		}
+		Log.e("", "_________________date : " + date);
+		return sdf.format(date);
+	}
 
 	private static String getYearHightHexString(int year) {
 		String yearStr = String.valueOf(year);
@@ -509,6 +657,23 @@ public class ProtoclData {
 		} else if (result.length() == 7) {
 			result = "0" + result;
 		}
+		return result;
+	}
+	/**
+	 * 计步模式 字符串 8位16进制数
+	 * 
+	 * @param value
+	 * @return
+	 */
+	private static String toHexStringForUpdateTime(int value) {
+		String result = Integer.toHexString(value);
+		if (result.length() == 1) {
+			result = "000" + result;
+		} else if (result.length() == 2) {
+			result = "00" + result;
+		} else if (result.length() == 3) {
+			result = "0" + result;
+		} 
 		return result;
 	}
 

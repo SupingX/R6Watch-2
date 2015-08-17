@@ -37,12 +37,13 @@ public class Constant {
 	public final static String SHARE_INCOMING_SOUND_ON_OFF = "share_incoming_sound_on_off";
 	
 	//协议 手表-->手机
-	public final static int PROTOCL_SLEEP_NOTIFY = 0x05;
+	public final static int PROTOCL_UPDATE_ALL_NOTIFY = 0x05;
 	public final static int PROTOCL_INCOMING_NOTIFY = 0x07;
 	public final static int PROTOCL_TIME_SYNC_NOTIFY = 0x11;
 	public final static int PROTOCL_CLOCK_NOTIFY = 0x13;
 	public final static int PROTOCL_STEP_GOAL_NOTIFY = 0x17;
 	public final static int PROTOCL_HEART_RATE_MAX_NOTIFY = 0x19;
+	public final static int PROTOCL_HEART_RATE_MAX_NOTIFY_TO_PHONE = 0x18;
 	public final static int PROTOCL_CAMERA_NOTIFY = 0x1A;
 	public final static int PROTOCL_REMIND_NOTIFY = 0x1C;
 	public final static int PROTOCL_ELECTRIC_NOTIFY = 0x21;

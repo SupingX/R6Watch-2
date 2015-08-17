@@ -22,10 +22,15 @@
             android:contentDescription="@string/app_name"
             android:src="@drawable/selector_btn_decrease_date" />
          <TextView
+             android:layout_marginLeft="12dp"
+             android:layout_marginRight="12dp"
+             android:id="@+id/tv_step_now_month"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
+            android:background="@drawable/selector_bg_count_now"
             android:gravity="center"
-            android:text="计步统计"
+                         android:clickable="true"
+            android:text="@string/count_step"
             android:textSize="16sp" />
 
         <ImageView
@@ -39,7 +44,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="最高值306.9690（万步）"
+            android:text="@string/count_step_info"
             android:textSize="14sp" />
 
         <com.mycj.healthy.view.StepMonthView
@@ -62,10 +67,15 @@
             android:contentDescription="@string/app_name"
             android:src="@drawable/selector_btn_decrease_date" />
          <TextView
+                 android:layout_marginLeft="12dp"
+             android:layout_marginRight="12dp"
+                     android:id="@+id/tv_sleep_now_month"
             android:layout_width="wrap_content"
+                         android:clickable="true"
             android:layout_height="36dp"
             android:gravity="center"
-            android:text="睡眠统计"
+            android:text="@string/count_sleep"
+               android:background="@drawable/selector_bg_count_now"
             android:textSize="16sp" />
 
         <ImageView
@@ -79,7 +89,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="最高值744（小时）"
+            android:text="@string/count_sleep_info"
             android:textSize="14sp" />
 
         <com.mycj.healthy.view.SleepMonthView

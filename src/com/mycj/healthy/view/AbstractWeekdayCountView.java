@@ -142,6 +142,21 @@ public abstract class AbstractWeekdayCountView extends View{
 		return maxDay;
 	}
 	
+	/**
+	 * 当前月的总天数
+	 * 
+	 * @param month
+	 * @return
+	 */
+	private int getMaxDayOfMonth(int month) {
+		// 获取当前时间
+		Calendar cal = Calendar.getInstance();
+		// 下面可以设置月份，注：月份设置要减1，所以设置1月就是1-1，设置2月就是2-1，如此类推
+		cal.set(Calendar.MONTH, month - 1);
+		int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+		return maxDay;
+	}
+	
 	
 	public void setCurrentDate(Date date){
 		this.currentDate = date;
@@ -203,10 +218,21 @@ public abstract class AbstractWeekdayCountView extends View{
 				weekday = start + "-" + dayOfMonth;
 				data = getData(dayOfMonth);
 				diff = 7;
-			} else if (dayOfWeek == 1) {// 今天是星期ri 一个星期的di一天
-				weekday = dayOfMonth + "";
+			} else if (dayOfWeek == 1) {// 今天是星期日 一个星期的第一天
+				int start;// 开始的日期
+				start = dayOfMonth;
 				data = getData(dayOfMonth + 6);
-				diff = 0;
+				int  end;
+				// 求下一个月的总天数
+				int maxDay = getMaxDayOfMonth(month);
+				if (dayOfMonth+6 >= maxDay) {// 当今天天数加上6大于本月最大数
+					end = maxDay - (dayOfMonth+6 );
+				} else {
+					end = dayOfMonth + 6;
+				}
+				weekday = start + "-" + end;
+				diff = 7;
+				
 			} else {
 				int start;
 				if (dayOfMonth <= dayOfWeek) {

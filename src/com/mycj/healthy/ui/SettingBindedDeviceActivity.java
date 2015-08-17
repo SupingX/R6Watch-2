@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -20,21 +19,18 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.litesuits.bluetooth.conn.ConnectState;
-import com.mycj.healthy.BaseApp;
 import com.mycj.healthy.BaseSettingActivity;
-import com.mycj.healthy.MainActivity;
 import com.mycj.healthy.R;
-import com.mycj.healthy.service.IncomingService;
 import com.mycj.healthy.service.LiteBlueService;
 import com.mycj.healthy.util.Constant;
 import com.mycj.healthy.util.SharedPreferenceUtil;
 import com.mycj.healthy.view.ActionSheetDialog;
+import com.mycj.healthy.view.ActionSheetDialog.OnCancelClickListener;
 import com.mycj.healthy.view.ActionSheetDialog.OnSheetItemClickListener;
 import com.mycj.healthy.view.ActionSheetDialog.SheetItemColor;
 
@@ -49,6 +45,13 @@ public class SettingBindedDeviceActivity extends BaseSettingActivity implements 
 	private LiteBlueService mLiteBlueService;
 	private boolean isScanning;
 
+	private ProgressBar mProgress;
+	private ActionSheetDialog dialog;
+	private ImageView imgDisconnectDevice;
+	private LinearLayout llBindedDevice;
+	private static Handler mHandler = new Handler() {
+	
+	};
 	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 
 		@Override
@@ -56,7 +59,10 @@ public class SettingBindedDeviceActivity extends BaseSettingActivity implements 
 			String action = intent.getAction();
 			if (action.equals(LiteBlueService.LITE_DEVICE_FOUND)) {
 				BluetoothDevice device = intent.getExtras().getParcelable(LiteBlueService.EXTRA_DEVICE);
-				if (!devices.contains(device)) {
+				if (!devices.contains(device) 
+						&& !device.getName().equals(SharedPreferenceUtil.get(SettingBindedDeviceActivity.this, Constant.SHARE_BINDING_DEVICE_NAME, ""))
+						&& !device.getAddress().equals(SharedPreferenceUtil.get(SettingBindedDeviceActivity.this, Constant.SHARE_BINDING_DEVICE_ADRESS, ""))
+						) {
 					devices.add(device);
 				}
 				runOnUiThread(new Runnable() {
@@ -66,73 +72,51 @@ public class SettingBindedDeviceActivity extends BaseSettingActivity implements 
 					}
 				});
 			} else if (action.equals(LiteBlueService.LITE_GATT_CONNECTED)) {
-				updateBlueConnectState();
-				// setCurrentDevice(mLiteBlueService.getCurrentBluetoothDevice());
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						updateBlueConnectState(1);
+						imgDisconnectDevice.setImageResource(R.drawable.ic_action_about);
+					}
+				});
 
 			} else if (action.endsWith(LiteBlueService.LITE_GATT_DISCONNECTED)) {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						setCurrentDevice(null);
-						Log.e("SettingBindedDeviceActivity", "_________LITE_GATT_DISCONNECTED____________");
+						updateBlueConnectState(2);
+						imgDisconnectDevice.setImageResource(R.drawable.ic_action_about);
 					}
 				});
-				updateBlueConnectState();
 			} else if (action.equals(LiteBlueService.LITE_SERVICE_DISCOVERED)) {
-				// final BluetoothDevice device =
-				// intent.getExtras().getParcelable(LiteBlueService.EXTRA_DEVICE);
-				final BluetoothDevice device = mLiteBlueService.getCurrentBluetoothDevice();
-
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						SharedPreferenceUtil.put(SettingBindedDeviceActivity.this, Constant.SHARE_CURRENT_DEVICE_NAME, device.getName());
-						SharedPreferenceUtil.put(SettingBindedDeviceActivity.this, Constant.SHARE_CURRENT_DEVICE_ADDRESS, device.getAddress());
-						setCurrentDevice(device);
-
-						writeIncoomingData();
+						setBindedDevice();
+						updateBlueConnectState(1);
+						imgDisconnectDevice.setImageResource(R.drawable.ic_action_about_on);
 					}
 				});
-				updateBlueConnectState();
 			} else if (action.equals(LiteBlueService.LITE_GATT_CONNECTTING)) {
-				updateBlueConnectState();
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						updateBlueConnectState(3);
+						imgDisconnectDevice.setImageResource(R.drawable.ic_action_about);
+					}
+				});
 			} else if (action.equals(LiteBlueService.LITE_CHARACTERISTIC_CHANGED)) {
 				byte[] value = intent.getExtras().getByteArray(LiteBlueService.EXTRA_VALUE);
 				Log.v("SettingBindedDeviceActivity", "______________________________byte[] value = : " + value);
 			}
 		}
 	};
-	private ProgressBar mProgress;
-	private ImageView imgDisconnectDevice;
-	private Handler mHandler = new Handler() {
-
-	};
-
-	private void openBluetooth() {
-		if (!mLiteBlueService.isEnable()) {
-			Toast.makeText(SettingBindedDeviceActivity.this, "请打开蓝牙", Toast.LENGTH_SHORT).show();
-			// mLiteBlueService.enable(MainActivity.this);
-		} else {
-			if (mLiteBlueService != null) {
-				mLiteBlueService.stopScanUsePeriodScanCallback();
-				mLiteBlueService.startScanUsePeriodScanCallback();
-				isScanning = true;
-				updateScanning();
-			}
-		}
-	}
-
-	private void writeIncoomingData() {
-		BaseApp app = (BaseApp) getApplication();
-		IncomingService incomingService = app.getIncomingService();
-		incomingService.doWriteToWatch(mLiteBlueService);
-	}
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_setting_binded_device);
 		mLiteBlueService = getLiteBlueService();
+			
 		initTitle();
 		initViews();
 		setListener();
@@ -141,31 +125,24 @@ public class SettingBindedDeviceActivity extends BaseSettingActivity implements 
 
 	@Override
 	protected void onResume() {
-
-		openBluetooth();
-		// lite
 		IntentFilter filter = LiteBlueService.getIntentFilter();
 		registerReceiver(mReceiver, filter);
-		// mHandler.postDelayed(new Runnable() {
-		//
-		// @Override
-		// public void run() {
-		// startScan();
-		// isScanning = true;
-		// updateScanning();
-		// }
-		// }, 500);
-
-		BluetoothDevice device = mLiteBlueService.getCurrentBluetoothDevice();
-		if (mLiteBlueService.getCurrentBluetoothDevice() != null) {
-			setCurrentDevice(device);
+		checkBlue();
+		
+		setBindedDevice();
+		if (mLiteBlueService.isConnetted()) {
+			updateBlueConnectState(1);
+		} else {
+			updateBlueConnectState(2);
 		}
-
 		super.onResume();
 	}
 
 	@Override
 	protected void onDestroy() {
+		if (dialog != null) {
+			dialog.dismiss();
+		}
 		stopScan();
 		unregisterReceiver(mReceiver);
 		super.onDestroy();
@@ -200,12 +177,13 @@ public class SettingBindedDeviceActivity extends BaseSettingActivity implements 
 		tvCurrentDeviceName = (TextView) findViewById(R.id.tv_current_device_name);
 		tvCurrentDeviceAdress = (TextView) findViewById(R.id.tv_current_device_adress);
 		Log.d("SettingBindedDeviceActivity", "_________________________________mLiteBlueService : " + mLiteBlueService);
-		setCurrentDevice(mLiteBlueService.getCurrentBluetoothDevice());
+		// setCurrentDevice(mLiteBlueService.getCurrentBluetoothDevice());
 
 		imgDisconnectDevice = (ImageView) findViewById(R.id.img_disconnect_device);
 		tvConnectInfo = (TextView) findViewById(R.id.tv_connect_info);
 		mProgress = (ProgressBar) findViewById(R.id.progress_blue);
 
+		llBindedDevice = (LinearLayout) findViewById(R.id.ll_binded_device);
 		// 标题背景颜色
 		findViewById(R.id.top_title).setBackgroundColor(getResources().getColor(R.color.blue));
 		devices = new ArrayList<BluetoothDevice>();
@@ -219,52 +197,99 @@ public class SettingBindedDeviceActivity extends BaseSettingActivity implements 
 		lvDevices.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int location, long arg3) {
-				BluetoothDevice device = devices.get(location);
-				mLiteBlueService.connnect(device);
-				stopScan();
-				isScanning = false;
-				updateScanning();
+				final BluetoothDevice device = devices.get(location);
+				mLiteBlueService.closeAll();
+				mHandler.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						stopScan();
+						isScanning = false;
+						updateScanning();
+						mLiteBlueService.connnect(device);
+						
+					}
+				},3000);
+//				stopScan();
+//				isScanning = false;
+//				updateScanning();
+				
+//				mLiteBlueService.connnect(device);
+			
+			
 			}
 		});
 
 		imgDisconnectDevice.setOnClickListener(this);
+		llBindedDevice.setOnClickListener(this);
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.img_disconnect_device:
-			if (mLiteBlueService.getCurrentBluetoothDevice() != null) {
+			if (isBinded()) {
 				final ActionSheetDialog dialog = new ActionSheetDialog(this).builder();
-				dialog.setTitle("解除绑定？");
-				dialog.addSheetItem("解除绑定", SheetItemColor.Red, new OnSheetItemClickListener() {
+				dialog.setTitle(getResources().getString(R.string.contact_binding));
+				dialog.addSheetItem(getResources().getString(R.string.confirm), SheetItemColor.Red, new OnSheetItemClickListener() {
 					@Override
 					public void onClick(int which) {
-						mLiteBlueService.closeAll();
-						mLiteBlueService.setCurrentBluetoothDevice(null);
+						runOnUiThread(new Runnable() {
+							public void run() {
+								mLiteBlueService.closeAll();
+								mLiteBlueService.setCurrentBluetoothDevice(null);
+								SharedPreferenceUtil.put(SettingBindedDeviceActivity.this, Constant.SHARE_BINDING_DEVICE_NAME, "");
+								SharedPreferenceUtil.put(SettingBindedDeviceActivity.this, Constant.SHARE_BINDING_DEVICE_ADRESS, "");
+								setBindedDevice();
+								startScan();
+								isScanning = true;
+								updateScanning();
+								tvConnectInfo.setText(getResources().getString(R.string.disconnect));
+							}
+						});
 
-						SharedPreferenceUtil.put(SettingBindedDeviceActivity.this, Constant.SHARE_BINDING_DEVICE_NAME, null);
-						SharedPreferenceUtil.put(SettingBindedDeviceActivity.this, Constant.SHARE_BINDING_DEVICE_ADRESS, null);
-
-						setCurrentDevice(null);
-						startScan();
-						isScanning = true;
-						updateScanning();
 					}
 				}).show();
 			} else {
-				toast("没有设备绑定...");
+				toast(getResources().getString(R.string.no_device_binding));
 			}
 			// mLiteBlueService.closeAll();
 			// startScan();
 			// isScanning = true;
 			// updateScanning();
 			break;
+		/*
+		 * case R.id.ll_binded_device: String mac =
+		 * (String)SharedPreferenceUtil.get(this,
+		 * Constant.SHARE_BINDING_DEVICE_ADRESS, ""); if
+		 * (mac!=null&&!mac.equals("")) { if (mLiteBlueService.isEnable()) { if
+		 * (mLiteBlueService.isConnetted()) { if
+		 * (mLiteBlueService.getCurrentBluetoothDevice()!=null) { if
+		 * (!mLiteBlueService
+		 * .getCurrentBluetoothDevice().getAddress().equals(mac)) {
+		 * mLiteBlueService.connnect(mac); } } } } } break;
+		 */
 		default:
 			break;
 		}
 	}
 
+	
+	/**
+	 * 检查蓝牙是否打开
+	 */
+	private void checkBlue() {
+		if (mLiteBlueService != null) {
+			if (!mLiteBlueService.isEnable()) {
+				showDialog();
+			} else {
+				mLiteBlueService.startScanUsePeriodScanCallback();
+			}
+		}
+	}
+	
+	/**
+	 * 搜索状态更新
+	 */
 	private void updateScanning() {
 		if (!isScanning) {
 			mProgress.setVisibility(View.INVISIBLE);
@@ -272,29 +297,66 @@ public class SettingBindedDeviceActivity extends BaseSettingActivity implements 
 			mProgress.setVisibility(View.VISIBLE);
 		}
 	}
-
-	private void setCurrentDevice(BluetoothDevice device) {
-		if (device == null) {
-			tvCurrentDeviceName.setText("无连接");
-			tvCurrentDeviceAdress.setText("无连接");
+	
+	/**
+	 * 设置当前绑定的设备
+	 */
+	private void setBindedDevice() {
+		String name = (String) SharedPreferenceUtil.get(this, Constant.SHARE_BINDING_DEVICE_NAME, "");
+		String address = (String) SharedPreferenceUtil.get(this, Constant.SHARE_BINDING_DEVICE_ADRESS, "");
+		String noBinding = getResources().getString(R.string.no_binded);
+		tvCurrentDeviceName.setText(name.equals("") ? noBinding: name);
+		tvCurrentDeviceAdress.setText(address.equals("") ? noBinding: address);
+	}
+	
+	/**
+	 * 是否绑定
+	 * @return
+	 */
+	public boolean isBinded() {
+		String name = (String) SharedPreferenceUtil.get(this, Constant.SHARE_BINDING_DEVICE_NAME, "");
+		String address = (String) SharedPreferenceUtil.get(this, Constant.SHARE_BINDING_DEVICE_ADRESS, "");
+		if (!name.equals("") && !address.equals("")) {
+			return true;
 		} else {
-			tvCurrentDeviceName.setText("[" + device.getName() + "]");
-			tvCurrentDeviceAdress.setText("[" + device.getAddress() + "]");
+			return false;
 		}
 	}
-
-	private void updateBlueConnectState() {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				tvConnectInfo.setText(mLiteBlueService.getCurrentState().getMessage());
+	
+	/**
+	 * 更新设备连接状态
+	 * @param state
+	 */
+	private void updateBlueConnectState(int state) {
+		switch (state) {
+		case 1:
+			if (isBinded()) {
+				tvConnectInfo.setText(getResources().getString(R.string.binded));
+				imgDisconnectDevice.setImageResource(R.drawable.ic_action_about_on);
+			} else {
+				tvConnectInfo.setText(getResources().getString(R.string.device_not_match));
+				startScan();
+				isScanning = true;
+				updateScanning();
 			}
-		});
+			break;
+		case 2:
+			tvConnectInfo.setText(getResources().getString(R.string.connect_disconnect));
+			startScan();
+			isScanning = true;
+			updateScanning();
+			break;
+		case 3:
+			tvConnectInfo.setText(getResources().getString(R.string.being_connected));
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	private void stopScan() {
 		if (mLiteBlueService != null) {
-			// mLiteBlueService.stopScan();
 			mLiteBlueService.stopScanUsePeriodScanCallback();
 			devices.clear();
 			mAdapter.notifyDataSetChanged();
@@ -303,11 +365,54 @@ public class SettingBindedDeviceActivity extends BaseSettingActivity implements 
 
 	private void startScan() {
 		if (mLiteBlueService != null) {
-			// mLiteBlueService.stopScan();
-			// mLiteBlueService.startScan();
 			mLiteBlueService.stopScanUsePeriodScanCallback();
 			mLiteBlueService.startScanUsePeriodScanCallback();
 		}
+	}
+
+	// private void openBluetooth() {
+	// if (!mLiteBlueService.isEnable()) {
+	// Toast.makeText(SettingBindedDeviceActivity.this, "请打开蓝牙",
+	// Toast.LENGTH_SHORT).show();
+	// // mLiteBlueService.enable(MainActivity.this);
+	// } else {
+	// if (mLiteBlueService != null) {
+	// mLiteBlueService.stopScanUsePeriodScanCallback();
+	// mLiteBlueService.startScanUsePeriodScanCallback();
+	// isScanning = true;
+	// updateScanning();
+	// }
+	// }
+	// }
+	
+	private void showDialog() {
+		dialog = new ActionSheetDialog(this).builder();
+		dialog.setTitle(getResources().getString(R.string.open_blue));
+		dialog.setOnCancelClickListener(new OnCancelClickListener() {
+	
+			@Override
+			public void onClick() {
+				finish();
+			}
+		});
+		dialog.addSheetItem(getResources().getString(R.string.confirm), SheetItemColor.Red, new OnSheetItemClickListener() {
+			@Override
+			public void onClick(int which) {
+				mHandler.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						if (mLiteBlueService.isEnable()) {
+							// 蓝牙打开
+							mLiteBlueService.startScanUsePeriodScanCallback();
+						} else {
+							// 未打开
+							finish();
+						}
+					}
+				}, 5000);
+				mLiteBlueService.enable();
+			}
+		}).show();
 	}
 
 	/**
@@ -334,7 +439,6 @@ public class SettingBindedDeviceActivity extends BaseSettingActivity implements 
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			Log.e("", "--------------------------------");
 			ViewHolder vh;
 			if (convertView == null) {
 				convertView = LayoutInflater.from(SettingBindedDeviceActivity.this).inflate(R.layout.item_bluetooth, parent, false);

@@ -6,6 +6,9 @@ import java.util.List;
 
 
 
+
+import com.mycj.healthy.entity.HeartRateData;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
@@ -24,7 +27,7 @@ public class HeartRateFrameLayout extends FrameLayout{
 	/**
 	 * 数据 ：心率
 	 */
-	private List<Integer> heartRates = new ArrayList<Integer>();
+	private List<HeartRateData> heartRates = new ArrayList<HeartRateData>();
 	
 	public HeartRateFrameLayout(Context context) {
 		super(context);
@@ -49,7 +52,11 @@ public class HeartRateFrameLayout extends FrameLayout{
 		
 	}
 	
-	public void setData(int data){
+	public  List<HeartRateData> getData()	{
+		return heartRates;
+	}
+	
+	public void setData(HeartRateData data){
 		Log.e("HeartRateFrameLayout", "_____pathView :" + pathView);
 		pathView.setData(data);
 		heartRates.add(data);
@@ -64,11 +71,14 @@ public class HeartRateFrameLayout extends FrameLayout{
 	 *
 	 */
 	public interface OnHeartRateChangeListener {
-		public void onChange(List<Integer> heartRates);
+		public void onChange(List<HeartRateData> heartRates);
 	}
 	private OnHeartRateChangeListener mOnHeartRateChangeListener;
 	public void setOnHeartRateChangeListener(OnHeartRateChangeListener l){
 		this.mOnHeartRateChangeListener = l;
 	}
 	
+	public void reset(){
+		pathView.reset();
+	}
 }

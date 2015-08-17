@@ -4,37 +4,27 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 
-import com.litesuits.bluetooth.conn.ConnectState;
 import com.mycj.healthy.BaseSettingActivity;
 import com.mycj.healthy.R;
 import com.mycj.healthy.service.LiteBlueService;
 import com.mycj.healthy.util.Constant;
-import com.mycj.healthy.util.DataUtil;
 import com.mycj.healthy.util.ProtoclData;
 import com.mycj.healthy.util.SharedPreferenceUtil;
-import com.mycj.healthy.view.ClickOnOffButton;
 import com.mycj.healthy.view.ColorSeekBar;
-import com.mycj.healthy.view.OnOffButton;
-import com.mycj.healthy.view.StepSeekBar;
 
 public class SettingStepGoalActivity extends BaseSettingActivity implements OnClickListener {
 	// private OnOffButton btnOnoff;
@@ -49,30 +39,32 @@ public class SettingStepGoalActivity extends BaseSettingActivity implements OnCl
 	private ColorSeekBar colorSeekBarStepGoal;
 	private int goal;
 	private LiteBlueService mLiteBlueService;
-//	private TextWatcher mTextWatcher = new TextWatcher() {
-//
-//		@Override
-//		public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//		}
-//
-//		@Override
-//		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//		}
-//
-//		@Override
-//		public void afterTextChanged(Editable s) {
-//			int value = Integer.valueOf(etStep.getText().toString().trim());
-//			if (value < MIN) {
-//				toast("最低目标步数设置:500");
-////				etStep.setText(String.valueOf(MIN));
-//			} else if (value > MAX) {
-//				etStep.setText(String.valueOf(MAX));
-//				toast("最高目标步数设置:9990");
-//			}
-//		}
-//	};
+	// private TextWatcher mTextWatcher = new TextWatcher() {
+	//
+	// @Override
+	// public void onTextChanged(CharSequence s, int start, int before, int
+	// count) {
+	//
+	// }
+	//
+	// @Override
+	// public void beforeTextChanged(CharSequence s, int start, int count, int
+	// after) {
+	//
+	// }
+	//
+	// @Override
+	// public void afterTextChanged(Editable s) {
+	// int value = Integer.valueOf(etStep.getText().toString().trim());
+	// if (value < MIN) {
+	// toast("最低目标步数设置:500");
+	// // etStep.setText(String.valueOf(MIN));
+	// } else if (value > MAX) {
+	// etStep.setText(String.valueOf(MAX));
+	// toast("最高目标步数设置:9990");
+	// }
+	// }
+	// };
 	private OnEditorActionListener mOnEditorActionListener = new OnEditorActionListener() {
 
 		@Override
@@ -118,21 +110,19 @@ public class SettingStepGoalActivity extends BaseSettingActivity implements OnCl
 			case 1:
 				String value = etStep.getText().toString().trim();
 				int progress = Integer.valueOf(value);
-				
+
 				if (progress < MIN) {
-					toast("最低目标步数设置:500");
+//					toast("最低目标步数设置:500");
 					progress = MIN;
 					etStep.setText(String.valueOf(MIN));
 				} else if (progress > MAX) {
 					etStep.setText(String.valueOf(MAX));
 					progress = MAX;
 					etStep.setText(String.valueOf(MAX));
-					toast("最高目标步数设置:9990");
+//					toast("最高目标步数设置:99990");
 				}
 				colorSeekBarStepGoal.setProgress(progress);
 				sbStep.setProgress(progress);
-				
-				
 
 				break;
 			default:
@@ -177,7 +167,7 @@ public class SettingStepGoalActivity extends BaseSettingActivity implements OnCl
 	public void setListener() {
 		sbStep.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
 		etStep.setOnEditorActionListener(mOnEditorActionListener);
-//		etStep.addTextChangedListener(mTextWatcher);
+		// etStep.addTextChangedListener(mTextWatcher);
 		cbStep.setOnClickListener(this);
 		cbStep.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
@@ -207,20 +197,23 @@ public class SettingStepGoalActivity extends BaseSettingActivity implements OnCl
 		Log.e("", "存goal : " + goal);
 		SharedPreferenceUtil.put(SettingStepGoalActivity.this, Constant.SHARE_STEP_ON_OFF, isChecked);
 		SharedPreferenceUtil.put(this, Constant.SHARE_STEP_GOAL, goal);
-		if(goal<MIN){
-			toast("最低目标步数设置:500");
+		if (goal < MIN) {
+			toast(getResources().getString(R.string.low_step_info));
 			return;
-		}if(goal>MAX){
-			toast("最高目标步数设置:9990");
 		}
-		if (isConnected(mLiteBlueService)) {
+		if (goal > MAX) {
+			toast(getResources().getString(R.string.high_step_info));
+		}
+		Log.e("", "**************mLiteBlueService.isConnetted() :" + mLiteBlueService.isConnetted());
+		if (mLiteBlueService.isConnetted()) {
+
 			// if (mLiteBlueService.getCurrentState() != null &&
 			// mLiteBlueService.getCurrentState() == ConnectState.Connected) {
 			// mLiteBlueService.writeCharactics(ProtoclData.toByteForStepProtocl(sbStep.getProgress(),
 			// isChecked ? 1 : 0));
 			mLiteBlueService.writeCharacticsUseConnectListener(ProtoclData.toByteForStepProtocl(sbStep.getProgress(), isChecked ? 1 : 0));
 		} else {
-			toast("未连接手环...");
+			toastNotConnectted();
 		}
 		finish();
 	}
@@ -261,17 +254,19 @@ public class SettingStepGoalActivity extends BaseSettingActivity implements OnCl
 		colorSeekBarStepGoal.setProgress(goal);
 		sbStep.setProgress(goal);
 		etStep.setText((goal <= MIN) ? "500" : (goal + ""));
-	
+
 	}
 
 	private void updateStepInfo(int progress) {
+		String msg ="";
 		if (progress >= 0 && progress < 33330) {
-			tvInfo.setText("运动评估：偏少");
+		msg = getResources().getString(R.string.sport_info_low);
 		} else if (progress >= 33330 && progress <= 66660) {
-			tvInfo.setText("运动评估：适中");
+			msg = getResources().getString(R.string.sport_info_nomal);
 		} else if (progress > 66660) {
-			tvInfo.setText("运动评估：过量");
+			msg = getResources().getString(R.string.sport_info_high);
 		}
+		tvInfo.setText(msg);
 	}
 
 }

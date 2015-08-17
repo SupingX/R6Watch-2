@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="app_name">心动</string>
     <!-- MainActivity -->
     <string name="main_tab_my">我的状态</string>
     <string name="main_tab_data">数据统计</string>
@@ -35,6 +35,10 @@
     <string name="sleep_info">为了方便系统地采集到准确的休息数据，请不要设置我重叠的休息时间。</string>
     <string name="sleep">睡眠</string>
     <!-- SettingStepGoalActivity -->
+    
+
+    <string name="high_step_info">最高目标步数设置:99990</string>
+    <string name="low_step_info">最低目标步数设置:500</string>
     <string name="target_step">目标步数</string>
     <string name="target_step_title">目标步数</string>
     <string name="exercise_evaluation">运动评估：</string>
@@ -44,10 +48,6 @@
      <string name="sleep_tips"> 睡眠：</string>
      <string name="siesta_tips">午休：</string>
      <string name="nap_tips">小憩： </string>
-     
-     
-    
-    
     <string name="step">步</string>
     <string name="step_info">亲，系统设定目标步数在500~99990之间，设置完成后，将会同目标步数给手表进行计步</string>
     <!-- InformationFragment -->
@@ -63,7 +63,9 @@
     <string name="complete_cal">已消耗卡洛里 ：</string>
     <string name="hour">小时</string>
     
-    
+        <string name="sport_info_low">运动评估：偏少</string>
+        <string name="sport_info_nomal">运动评估：适中</string>
+        <string name="sport_info_high">运动评估：过量</string>
     <string name="low">过低</string>
     <string name="nomal">适中</string>
     <string name="high">过高</string>
@@ -84,12 +86,54 @@
     
     
     <!-- SettingFragment -->
+        
+         <string name="open_blue_ing">蓝牙正在打开中...</string>
+         <string name="open_blue">打开蓝牙？</string>
+    <string name="sync_ok">同步完成</string>
+    <string name="confirm">确定</string>
+    <string name="confirm_exit">确定推出？</string>
+    <string name="disconnect">未连接</string>
+    <string name="off">未开启</string>
+    <string name="on">已开启</string>
+    <string name="disconnect_device">未连接手环</string>
     <string name="setting">设置</string>
     <string name="sync_data">同步所有数据</string>
     <string name="sync_time">同步手表时间</string>
-    <string name="introduce">应用介绍 </string>
+    <string name="introduce">应用版本 </string>
     <string name="exit">关闭</string>
     <string name="cancel">取消</string>
     <string name="goal_step">目标步数 ：</string>
+    
+     <!-- CountFragment -->
+      <string name="count">数据统计</string>
+         <string name="day_count">日统计</string>
+             <string name="month_count">月统计</string>
+             
+              <string name="count_step">计步统计</string>
+    <string name="count_step_info">最高值306.9690（万步）</string>
+    <string name="count_sleep">睡眠统计</string>
+    <string name="count_sleep_info">最高值744（小时）</string>
+    <string name="count_step_info_day">最高值20000（步）</string>
+    <string name="count_sleep_info_day">最高值24（小时）</string>
+    
+    
+     <string name="count_hr">心率统计</string>
+    <string name="save">保存</string>
+    <string name="select">查看</string>
+    <string name="reset">重置</string>
+    <string name="unit_bpm">(单位)Bpm</string>
+    
+        <string name="no_data">无睡眠数据</string>
+        
+        	<!-- settingBindedDEVICEACTIVITY -->
+                <string name="contact_binding">接触绑定？</string>
+                <string name="no_device_binding">没有设备绑定</string>
+                <string name="no_binded">无绑定"</string>
+                      <string name="binded">已绑定设备</string>
+                      <string name="device_not_match">连接的设备不匹配</string>
+                      <string name="connect_disconnect">连接断开</string>
+                      <string name="being_connected">正在连接</string>
+           
+	
 
 </resources>
